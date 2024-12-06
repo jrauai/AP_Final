@@ -4,12 +4,13 @@ import UserInformation.User;
 import UserInformation.UserStorage;
 import Verification.GoogleTotpUtil;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -48,10 +49,9 @@ public class Registration extends Application {
         PasswordField confirmPasswordField = new PasswordField();
         confirmPasswordField.setPromptText("Confirm Password");
 
-        // Error message label with wrapping
-        Label qrCodeMessage = new Label();
-        qrCodeMessage.setStyle("-fx-text-fill: red;");
-        qrCodeMessage.setWrapText(true); // Enable text wrapping
+        Label signUpMessage = new Label();
+        signUpMessage.setStyle("-fx-text-fill: red;");
+        signUpMessage.setWrapText(true);
 
         Button signUpButton = new Button("Sign Up");
         signUpButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
@@ -62,57 +62,44 @@ public class Registration extends Application {
             String password = passwordField.getText();
             String confirmPassword = confirmPasswordField.getText();
 
-            // Validation checks
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                qrCodeMessage.setText("All fields are required.");
-                qrCodeMessage.setStyle("-fx-text-fill: red;");
+                signUpMessage.setText("All fields are required.");
             } else if (!password.equals(confirmPassword)) {
-                qrCodeMessage.setText("Passwords do not match.");
-                qrCodeMessage.setStyle("-fx-text-fill: red;");
+                signUpMessage.setText("Passwords do not match.");
             } else if (!isValidEmail(email)) {
-                qrCodeMessage.setText("Invalid email format.");
-                qrCodeMessage.setStyle("-fx-text-fill: red;");
+                signUpMessage.setText("Invalid email format.");
             } else if (isEmailAlreadyRegistered(email)) {
-                qrCodeMessage.setText("Email is already registered.");
-                qrCodeMessage.setStyle("-fx-text-fill: red;");
+                signUpMessage.setText("Email is already registered.");
             } else if (!isValidPassword(password)) {
-                qrCodeMessage.setText("Password must be at least 8 characters long and contain both letters and numbers.");
-                qrCodeMessage.setStyle("-fx-text-fill: red;");
+                signUpMessage.setText("Password must be at least 8 characters long and contain both letters and numbers.");
             } else {
                 String secretKey = totpUtil.generateSecretKey();
-                String totpUri = String.format("otpauth://totp/FitnessApp:%s?secret=%s&issuer=FitnessApp", email, secretKey);
-
-                // Save user to storage
                 User newUser = new User(email, password, secretKey);
                 userStorage.addUser(newUser);
 
-                // Generate QR Code as a byte array
-                byte[] qrCodeBytes = totpUtil.generateQrCode(totpUri);
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("AdditionalInfo.fxml"));
+                    Parent additionalInfoRoot = loader.load();
 
-                if (qrCodeBytes != null) {
-                    // Convert the byte array into an Image
-                    javafx.scene.image.Image qrImage = new javafx.scene.image.Image(
-                            new java.io.ByteArrayInputStream(qrCodeBytes)
-                    );
+                    // Pass the secretKey to AdditionalInfoController
+                    AdditionalInfoController controller = loader.getController();
+                    controller.setSecretKey(secretKey);
 
-                    // Display the QR Code in a new ImageView
-                    ImageView qrCodeView = new ImageView(qrImage);
-                    qrCodeView.setFitWidth(200); // Adjust size
-                    qrCodeView.setFitHeight(200);
+                    Stage additionalInfoStage = new Stage();
+                    additionalInfoStage.setScene(new Scene(additionalInfoRoot));
+                    additionalInfoStage.setTitle("Additional Information");
+                    additionalInfoStage.show();
 
-                    // Add the QR Code to the sign-up section
-                    signUpSection.getChildren().add(qrCodeView);
-
-                    qrCodeMessage.setStyle("-fx-text-fill: green;");
-                    qrCodeMessage.setText("Account created! Scan the QR Code for OTP setup.");
-                } else {
-                    qrCodeMessage.setStyle("-fx-text-fill: red;");
-                    qrCodeMessage.setText("Failed to generate QR Code.");
+                    // Close the current registration window
+                    ((Stage) signUpButton.getScene().getWindow()).close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    signUpMessage.setText("Failed to load Additional Info page.");
                 }
             }
         });
 
-        signUpSection.getChildren().addAll(signUpTitle, nameField, emailField, passwordField, confirmPasswordField, signUpButton, qrCodeMessage);
+        signUpSection.getChildren().addAll(signUpTitle, nameField, emailField, passwordField, confirmPasswordField, signUpButton, signUpMessage);
 
         // Separator
         Separator separator = new Separator();
@@ -153,14 +140,24 @@ public class Registration extends Application {
                 if (user != null && user.getPassword().equals(password)) {
                     int otpCode = Integer.parseInt(otp);
                     if (totpUtil.verifyCode(user.getSecretKey(), otpCode)) {
-                        signInMessage.setStyle("-fx-text-fill: green;");
-                        signInMessage.setText("Sign in successful!");
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
+                            Parent homePageRoot = loader.load();
+
+                            Stage homeStage = new Stage();
+                            homeStage.setScene(new Scene(homePageRoot, 1024, 700));
+                            homeStage.setTitle("Home Page");
+                            homeStage.show();
+
+                            ((Stage) signInButton.getScene().getWindow()).close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            signInMessage.setText("Failed to load Home Page.");
+                        }
                     } else {
-                        signInMessage.setStyle("-fx-text-fill: red;");
                         signInMessage.setText("Invalid OTP.");
                     }
                 } else {
-                    signInMessage.setStyle("-fx-text-fill: red;");
                     signInMessage.setText("Invalid credentials.");
                 }
             }
@@ -176,7 +173,6 @@ public class Registration extends Application {
         primaryStage.show();
     }
 
-    // Validate email format using regex
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -184,12 +180,10 @@ public class Registration extends Application {
         return matcher.matches();
     }
 
-    // Check if the email is already registered
     private boolean isEmailAlreadyRegistered(String email) {
         return userStorage.getUserByEmail(email) != null;
     }
 
-    // Validate password strength
     private boolean isValidPassword(String password) {
         return password.length() >= 8 && password.matches(".*[A-Za-z].*") && password.matches(".*[0-9].*");
     }
