@@ -1,15 +1,12 @@
 package Assignment;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.util.Objects;
 
 //SideBar
 public class MainLayout {
@@ -48,19 +45,31 @@ public class MainLayout {
 
     @FXML
     public void loadHomePage() {
-        loadPage("/Assignment/HomePage.fxml");
+        HomePageController controller = loadPage("/Assignment/HomePage.fxml");
         highlightButton(homeButton);
+        if (controller != null){
+            controller.loadFitnessGoalToHome();
+            controller.loadExerciseToHome();
+            controller.loadNutritionToHome();
+            controller.loadUsernameToHome();
+        }
     }
 
     @FXML
     public void loadFitnessGoalPage() {
-        FitnessGoal controller = loadPage("/Assignment/FitnessGoal.fxml");
+        FitnessGoalController controller = loadPage("/Assignment/FitnessGoal.fxml");
         highlightButton(fitnessGoalButton);
         if (controller != null){
             controller.loadFitnessGoalsFromFile();
             controller.calculateWeightProgress();
         }
 
+    }
+
+    @FXML
+    public void loadProfilePage() {
+        ProfileController controller = loadPage("/Assignment/Profile.fxml");
+        highlightButton(SettingsButton);
     }
 
     public <T> T loadPage(String fxmlPath) {

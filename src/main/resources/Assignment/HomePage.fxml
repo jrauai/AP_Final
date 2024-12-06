@@ -1,11 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePage">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePageController">
     <children>
-        <Text layoutX="111.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome To Home Page" />
+        <VBox prefHeight="650.0" prefWidth="1111.0">
+            <children>
+                <HBox alignment="CENTER" prefHeight="151.0" prefWidth="970.0" style="-fx-background-color: #FFFAF0;">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back " />
+                        <Label fx:id="welcomeHome" text="&lt;Username&gt;" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="47.0" prefWidth="1020.0" />
+                <HBox prefHeight="144.0" prefWidth="1020.0">
+                    <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #F0F8FF;">
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="144.0" prefWidth="204.0">
+                                    <children>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Weight difference in this month" underline="true" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Initial Weight: " />
+                                        <Label fx:id="initialWeightHome" text="(kg)" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current Weight: " />
+                                        <Label fx:id="currentWeightHome" text="(kg)" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TargetWeight: " />
+                                        <Label fx:id="targetWeightHome" text="(kg)" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <VBox prefHeight="140.0" prefWidth="70.0" />
+                        <HBox alignment="CENTER" prefHeight="144.0" prefWidth="235.0">
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="144.0" prefWidth="225.0" style="-fx-background-color: #FAEBD7;">
+                                    <children>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise Logging" underline="true" />
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@AP_Image/Step.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise Number: " wrappingWidth="95.9564208984375" />
+                                                <Label fx:id="exerciseNumberHome" prefHeight="17.0" prefWidth="91.0" text="ExerciseNumber" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fitHeight="28.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@AP_Image/Duration.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Duration: " wrappingWidth="83.18298494815826" />
+                                                <Label fx:id="durationHome" prefHeight="17.0" prefWidth="89.0" text="Total Duration" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fitHeight="35.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@AP_Image/CalorieBurned.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Calories Burned: " wrappingWidth="91.06842255592346" />
+                                                <Label fx:id="exerciseCalorieHome" prefHeight="17.0" prefWidth="90.0" text="Calories Burned" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="140.0" prefWidth="70.0" />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="144.0" prefWidth="200.0" style="-fx-background-color: #FAFAD2;">
+                                    <children>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nutrition Logging" underline="true" />
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                            <children>
+                                                <ImageView fitHeight="40.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@AP_Image/Food.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Calories: " />
+                                                <Label fx:id="foodCalorieHome" text="Total Calories" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <HBox prefHeight="65.0" prefWidth="1020.0" />
+                <HBox alignment="CENTER" prefHeight="153.0" prefWidth="1020.0" style="-fx-background-color: #DCDCDC;">
+                    <children>
+                        <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@AP_Image/Cycling.png" />
+                            </image>
+                        </ImageView>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@AP_Image/Running.png" />
+                            </image>
+                        </ImageView>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@AP_Image/Cycling.png" />
+                            </image>
+                        </ImageView>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@AP_Image/Streching.png" />
+                            </image>
+                        </ImageView>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                    </children>
+                </HBox>
+                <VBox prefHeight="200.0" prefWidth="100.0" />
+            </children>
+        </VBox>
     </children>
-</AnchorPane>
+</StackPane>
