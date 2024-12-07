@@ -41,6 +41,11 @@ public class FitnessGoalController {
     @FXML
     private Label progressLabel;
 
+    private String username;
+    public void setUsername(String username) {
+        this.username=username;
+    }
+
 
     //Progress Bar (weight)
     public void calculateWeightProgress(){
@@ -68,9 +73,12 @@ public class FitnessGoalController {
             System.out.println("Invalid input: Please enter valid numbers for weights.");
         }
     }
-    @FXML
+
+
     public void saveFitnessGoalsToFile(){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\IdeaProjects\\AP_G5\\src\\main\\java\\Assignment\\fitnessGoals.txt"))){
+        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
             writer.write("Initial Weight: " + initialWeightField.getText());
             writer.newLine();
             writer.write("Current Weight: " + currentWeightField.getText());
@@ -91,42 +99,55 @@ public class FitnessGoalController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 
     @FXML
     public void loadFitnessGoalsFromFile() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\fitnessGoals.txt");
+        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
 
         try (Scanner scanner = new Scanner(file)) {
 
-            if(scanner.hasNext()){
-                initialWeightField.setText(scanner.nextLine().split(": ")[1]);
-            }
+            initialWeightField.setText("0.0");
+            currentWeightField.setText("0.0");
+            targetWeightField.setText("0.0");
+            chestField.setText("0.0");
+            waistField.setText("0.0");
+            hipField.setText("0.0");
+            targetCalorieField.setText("0.0");
 
-            if (scanner.hasNextLine()) {
-                currentWeightField.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                targetWeightField.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                chestField.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                waistField.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                hipField.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                targetCalorieField.setText(scanner.nextLine().split(": ")[1]);
-            }
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
 
+                if (line.contains(": ")) {
+                    String[] parts = line.split(": ");
+                    if (parts.length > 1) {
+                        if (line.startsWith("Initial Weight")) {
+                            initialWeightField.setText(parts[1].trim());
+                        } else if (line.startsWith("Current Weight")) {
+                            currentWeightField.setText(parts[1].trim());
+                        } else if (line.startsWith("Target Weight")) {
+                            targetWeightField.setText(parts[1].trim());
+                        } else if (line.startsWith("Chest")) {
+                            chestField.setText(parts[1].trim());
+                        } else if (line.startsWith("Waist")) {
+                            waistField.setText(parts[1].trim());
+                        } else if (line.startsWith("Hips")) {
+                            hipField.setText(parts[1].trim());
+                        } else if (line.startsWith("Calories")) {
+                            targetCalorieField.setText(parts[1].trim());
+                        }
+                    }
+                }
+            }
+            calculateWeightProgress();
             System.out.println("Data loaded successfully.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.err.println("Error: Fitness goals file not found.");
         }
     }
+
+
 }

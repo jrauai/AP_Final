@@ -38,16 +38,20 @@ public class MainLayout {
     @FXML
     private Button logOutButton;
 
+
     @FXML
     public void initialize() {
         loadHomePage();
     }
+
+    private String  username="Danniel";
 
     @FXML
     public void loadHomePage() {
         HomePageController controller = loadPage("/Assignment/HomePage.fxml");
         highlightButton(homeButton);
         if (controller != null){
+            controller.setUsername(username);
             controller.loadFitnessGoalToHome();
             controller.loadExerciseToHome();
             controller.loadNutritionToHome();
@@ -60,8 +64,8 @@ public class MainLayout {
         FitnessGoalController controller = loadPage("/Assignment/FitnessGoal.fxml");
         highlightButton(fitnessGoalButton);
         if (controller != null){
+            controller.setUsername(username);
             controller.loadFitnessGoalsFromFile();
-            controller.calculateWeightProgress();
         }
 
     }

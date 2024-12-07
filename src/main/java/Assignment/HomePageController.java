@@ -3,7 +3,6 @@ package Assignment;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -43,6 +42,10 @@ public class HomePageController extends Application {
     @FXML
     private Label welcomeHome;
 
+    private String username;
+    public void setUsername(String username) {
+        this.username=username;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -61,19 +64,31 @@ public class HomePageController extends Application {
         }
     }
 
+
     public void loadFitnessGoalToHome() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\fitnessGoals.txt");
+        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
+
         try (Scanner scanner = new Scanner(file)) {
 
-            if (scanner.hasNext()) {
-                initialWeightHome.setText(scanner.nextLine().split(": ")[1]);
-            }
+            initialWeightHome.setText("0.0");
+            currentWeightHome.setText("0.0");
+            targetWeightHome.setText("0.0");
 
-            if (scanner.hasNextLine()) {
-                currentWeightHome.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                targetWeightHome.setText(scanner.nextLine().split(": ")[1]);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                if (line.contains(": ")) {
+                    String[] parts = line.split(": ");
+                    if (parts.length > 1) {
+                        if (line.contains("Initial Weight")) {
+                            initialWeightHome.setText(parts[1].trim());
+                        } else if (line.contains("Current Weight")) {
+                            currentWeightHome.setText(parts[1].trim());
+                        } else if (line.contains("Target Weight")) {
+                            targetWeightHome.setText(parts[1].trim());
+                        }
+                    }
+                }
             }
             System.out.println("Data loaded successfully.");
 
@@ -85,20 +100,31 @@ public class HomePageController extends Application {
     }
 
     public void loadExerciseToHome() {
+        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\exerciseLog.txt");
 
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\exerciseHome.txt");
         try (Scanner scanner = new Scanner(file)) {
 
-            if (scanner.hasNext()) {
-                exerciseNumberHome.setText(scanner.nextLine().split(": ")[1]);
+            exerciseNumberHome.setText("0.0");
+            durationHome.setText("0.0");
+            exerciseCalorieHome.setText("0.0");
+
+            while (scanner.hasNextLine()) {
+                String line=scanner.nextLine();
+
+                if (line.contains(": ")){
+                    String[] parts = line.split(": ");
+                    if (parts.length > 1){
+                        if (line.contains("Exercise Number")) {
+                            exerciseNumberHome.setText(parts[1].trim());
+                        } else if (line.contains("Duration")) {
+                            durationHome.setText(parts[1].trim());
+                        } else if (line.contains("Exercise Calories")) {
+                            exerciseCalorieHome.setText(parts[1].trim());
+                        }
+                    }
+                }
             }
 
-            if (scanner.hasNextLine()) {
-                durationHome.setText(scanner.nextLine().split(": ")[1]);
-            }
-            if (scanner.hasNextLine()) {
-                exerciseCalorieHome.setText(scanner.nextLine().split(": ")[1]);
-            }
             System.out.println("Data loaded successfully.");
 
         } catch (FileNotFoundException e) {
@@ -109,12 +135,19 @@ public class HomePageController extends Application {
     }
 
     public void loadNutritionToHome() {
+        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\nutrition.txt");
 
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\foodHome.txt");
         try (Scanner scanner = new Scanner(file)) {
+            foodCalorieHome.setText("0.0");
 
-            if (scanner.hasNext()) {
-                foodCalorieHome.setText(scanner.nextLine().split(": ")[1]);
+            if (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.contains(": ")) {
+                    String[] parts = line.split(": ");
+                    if (parts.length > 1) {
+                        foodCalorieHome.setText(parts[1].trim());
+                    }
+                }
             }
             System.out.println("Data loaded successfully.");
 
@@ -126,20 +159,7 @@ public class HomePageController extends Application {
     }
 
     public void loadUsernameToHome() {
-
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\usernameHome.txt");
-        try (Scanner scanner = new Scanner(file)) {
-
-            if (scanner.hasNext()) {
-                welcomeHome.setText(scanner.nextLine().split(": ")[1]);
-            }
-            System.out.println("Data loaded successfully.");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error: Fitness goals file not found.");
-        }
-
+        welcomeHome.setText(username);
     }
 
 

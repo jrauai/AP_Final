@@ -3,5 +3,5 @@ Current Weight: 67
 Target Weight: 58
 Chest: 80
 Waist: 30
-Hips: 90
+Hips: 80
 Calories: 450
