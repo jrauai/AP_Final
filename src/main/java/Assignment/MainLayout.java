@@ -8,7 +8,6 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
-//SideBar
 public class MainLayout {
 
     @FXML
@@ -50,7 +49,7 @@ public class MainLayout {
     public void loadHomePage() {
         HomePageController controller = loadPage("/Assignment/HomePage.fxml");
         highlightButton(homeButton);
-        if (controller != null){
+        if (controller != null) {
             controller.setUsername(username);
             controller.loadFitnessGoalToHome();
             controller.loadExerciseToHome();
@@ -60,14 +59,24 @@ public class MainLayout {
     }
 
     @FXML
+    public void loadStepsPage() {
+        StepsController controller = loadPage("/Assignment/StepsPage.fxml");
+        highlightButton(stepsButton);
+        // Remove the call to initializeStepsData()
+        if (controller != null) {
+            controller.initialize(); // Optionally re-trigger initialization if needed
+        }
+    }
+
+
+    @FXML
     public void loadFitnessGoalPage() {
         FitnessGoalController controller = loadPage("/Assignment/FitnessGoal.fxml");
         highlightButton(fitnessGoalButton);
-        if (controller != null){
+        if (controller != null) {
             controller.setUsername(username);
             controller.loadFitnessGoalsFromFile();
         }
-
     }
 
     @FXML
@@ -101,6 +110,5 @@ public class MainLayout {
         logOutButton.setStyle("-fx-background-color: transparent;");
 
         selectedButton.setStyle("-fx-background-color: #d0d0d0;");
-
     }
 }

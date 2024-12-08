@@ -3,7 +3,7 @@ package UserInformation;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L;  // Added serial version UID for better compatibility
+    private static final long serialVersionUID = 1L;
 
     private String email;
     private String password;
@@ -33,7 +33,6 @@ public class User implements Serializable {
         this.weight = weight;
     }
 
-    // Getters and Setters for all fields
     public String getEmail() {
         return email;
     }
@@ -98,7 +97,7 @@ public class User implements Serializable {
         this.weight = weight;
     }
 
-    // Method to display user info as a string (for debugging or logging purposes)
+    // Method to display user info as a string
     @Override
     public String toString() {
         return "User{" +

@@ -46,7 +46,7 @@
                                             <children>
                                                 <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>
-                                                        <Image url="@AP_Image/Step.png" />
+                                                        <Image url="@AP_Image/Footsteps.png" />
                                                     </image>
                                                 </ImageView>
                                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise Number: " wrappingWidth="95.9564208984375" />
@@ -55,9 +55,9 @@
                                         </HBox>
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                             <children>
-                                                <ImageView fitHeight="28.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView fitHeight="28.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>
-                                                        <Image url="@AP_Image/Duration.png" />
+                                                        <Image url="@AP_Image/Stopwatch.png" />
                                                     </image>
                                                 </ImageView>
                                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Duration: " wrappingWidth="83.18298494815826" />

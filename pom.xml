@@ -61,6 +61,29 @@
             <artifactId>javase</artifactId>
             <version>3.4.1</version>
         </dependency>
+
+        <!-- google fitness api -->
+                <dependency>
+                    <groupId>com.google.apis</groupId>
+                    <artifactId>google-api-services-fitness</artifactId>
+                    <version>v1-rev20231107-2.0.0</version>
+                </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.35.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+            <version>1.41.8</version>
+        </dependency>
+
     </dependencies>
 
     <build>

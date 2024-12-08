@@ -1,5 +1,7 @@
 package Assignment;
 
+import UserInformation.User;
+import UserInformation.UserStorage;
 import Verification.GoogleTotpUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 public class AdditionalInfoController {
 
@@ -122,6 +125,41 @@ public class AdditionalInfoController {
         try {
             int otpCode = Integer.parseInt(otp);
             if (totpUtil.verifyCode(secretKey, otpCode)) {
+                // Retrieve additional information
+                String gender = genderComboBox.getValue();
+                String dob = dobPicker.getValue() != null ? dobPicker.getValue().toString() : "";
+                String nationality = nationalityDropdown.getValue();
+                String height = heightField.getText();
+                String weight = weightField.getText();
+
+                // Load user data from storage
+                UserStorage userStorage = new UserStorage();
+                User user = userStorage.getUserBySecretKey(secretKey);
+
+                if (user != null) {
+                    // Update user information
+                    user.setGender(gender);
+                    user.setDateOfBirth(dob);
+                    user.setNationality(nationality);
+                    user.setHeight(height);
+                    user.setWeight(weight);
+
+                    // Save the updated user to the file
+                    List<User> users = userStorage.loadUsers();
+                    for (int i = 0; i < users.size(); i++) {
+                        if (users.get(i).getSecretKey().equals(secretKey)) {
+                            users.set(i, user);
+                            break;
+                        }
+                    }
+                    //userStorage.saveUsers(users);
+                    messageLabel.setStyle("-fx-text-fill: green;");
+                    messageLabel.setText("Data saved successfully!");
+                } else {
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    messageLabel.setText("User not found.");
+                }
+
                 // Navigate to Home Page
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
                 Parent homePageRoot = loader.load();
@@ -146,4 +184,5 @@ public class AdditionalInfoController {
             messageLabel.setText("Failed to load Home Page.");
         }
     }
+
 }

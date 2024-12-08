@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Assignment.StepsController">
+    <children>
+        <VBox spacing="20" layoutX="20" layoutY="20">
+            <!-- Steps Overview Section -->
+            <HBox spacing="30">
+                <VBox spacing="10">
+                    <Label text="Steps" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+                    <Label fx:id="stepsLabel" text="0" style="-fx-font-size: 30; -fx-font-weight: bold;" />
+                </VBox>
+                <VBox spacing="10">
+                    <Label text="Target" style="-fx-font-size: 16;" />
+                    <Label fx:id="targetLabel" text="10,000" style="-fx-font-size: 18;" />
+                </VBox>
+                <ProgressBar fx:id="stepsProgressBar" prefWidth="300" progress="0.0" />
+            </HBox>
+
+            <HBox spacing="20">
+                <VBox spacing="5">
+                    <Label text="Distance (km)" style="-fx-font-size: 14;" />
+                    <Label fx:id="distanceLabel" text="0.0" style="-fx-font-size: 16;" />
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Calories (kcal)" style="-fx-font-size: 14;" />
+                    <Label fx:id="caloriesLabel" text="0.0" style="-fx-font-size: 16;" />
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Floors" style="-fx-font-size: 14;" />
+                    <Label fx:id="floorsLabel" text="0" style="-fx-font-size: 16;" />
+                </VBox>
+            </HBox>
+
+            <!-- Graph Section -->
+            <Label text="Steps by Time of Day" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <BarChart fx:id="stepsBarChart" title="Steps by Time of Day" legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Time (h)" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Steps" />
+                </yAxis>
+            </BarChart>
+        </VBox>
+    </children>
+</AnchorPane>
