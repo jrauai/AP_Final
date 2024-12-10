@@ -66,7 +66,7 @@ public class HomePageController extends Application {
 
 
     public void loadFitnessGoalToHome() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
+        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
 
         try (Scanner scanner = new Scanner(file)) {
 
@@ -100,7 +100,7 @@ public class HomePageController extends Application {
     }
 
     public void loadExerciseToHome() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\exerciseLog.txt");
+        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/exerciseLog.txt");
 
         try (Scanner scanner = new Scanner(file)) {
 
@@ -135,7 +135,7 @@ public class HomePageController extends Application {
     }
 
     public void loadNutritionToHome() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\nutrition.txt");
+        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/nutrition.txt");
 
         try (Scanner scanner = new Scanner(file)) {
             foodCalorieHome.setText("0.0");

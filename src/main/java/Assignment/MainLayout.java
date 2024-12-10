@@ -43,7 +43,7 @@ public class MainLayout {
         loadHomePage();
     }
 
-    private String username = "Danniel";
+    private String username = "Ricciardo";
 
     @FXML
     public void loadHomePage() {
@@ -56,6 +56,12 @@ public class MainLayout {
             controller.loadNutritionToHome();
             controller.loadUsernameToHome();
         }
+    }
+
+    @FXML
+    public void loaddailyActivities() {
+        DailyActivitiesController controller = loadPage("/Assignment/DailyActivities.fxml");
+        highlightButton(dailyActivitiesButton);
     }
 
     @FXML

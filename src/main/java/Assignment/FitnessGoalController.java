@@ -76,7 +76,7 @@ public class FitnessGoalController {
 
 
     public void saveFitnessGoalsToFile(){
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
+        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
             writer.write("Initial Weight: " + initialWeightField.getText());
@@ -105,7 +105,7 @@ public class FitnessGoalController {
 
     @FXML
     public void loadFitnessGoalsFromFile() {
-        File file = new File("C:\\Users\\User\\IdeaProjects\\AP_Final\\src\\main\\java\\Assignment\\File IO\\"+username+"_data\\fitnessGoals.txt");
+        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
 
         try (Scanner scanner = new Scanner(file)) {
 
