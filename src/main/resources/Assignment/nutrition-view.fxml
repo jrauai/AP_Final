@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="587.0" prefWidth="587.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.NutritionController">
+    <children>
+        <Label layoutX="237.0" layoutY="14.0" text="Nutrition Tracker">
+            <font>
+                <Font name="Arial Rounded MT Bold" size="15.0" />
+            </font></Label>
+        <AnchorPane layoutX="25.0" layoutY="47.0" prefHeight="164.0" prefWidth="532.0" style="-fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 5;">
+            <children>
+                <ProgressBar fx:id="progressBar" layoutX="196.0" layoutY="118.0" prefHeight="20.0" prefWidth="315.0" progress="0.0" />
+                <Circle fill="#ff1fe532" layoutX="99.0" layoutY="74.0" radius="60.0" stroke="BLACK" strokeType="INSIDE" />
+                <Label fx:id="remainingLabel" alignment="CENTER" layoutX="54.0" layoutY="51.0" prefHeight="31.0" prefWidth="93.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="25.0" />
+                    </font>
+                </Label>
+                <Label layoutX="73.0" layoutY="89.0" text="remaining" />
+                <Label layoutX="214.0" layoutY="35.0" text="Goal Calories">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Label layoutX="339.0" layoutY="35.0" text="Food">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Label layoutX="429.0" layoutY="35.0" text="Exercise">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Label fx:id="goalCaloriesLabel" alignment="CENTER" layoutX="229.0" layoutY="74.0" prefHeight="23.0" prefWidth="55.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="20.0" />
+                    </font></Label>
+                <Label fx:id="foodLabel" alignment="CENTER" layoutX="315.0" layoutY="74.0" prefHeight="23.0" prefWidth="86.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="20.0" />
+                    </font></Label>
+                <Label fx:id="exerciseLabel" alignment="CENTER" layoutX="435.0" layoutY="74.0" prefHeight="23.0" prefWidth="43.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="20.0" />
+                    </font>
+                </Label>
+                <Label fx:id="progressLabel" layoutX="347.0" layoutY="142.0" text="0%" textAlignment="RIGHT">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="15.0" />
+                    </font>
+                </Label>
+            </children></AnchorPane>
+        <TextField fx:id="foodNameText" layoutX="161.0" layoutY="236.0" prefHeight="26.0" prefWidth="232.0" />
+        <ChoiceBox fx:id="typeChoiceBox" layoutX="40.0" layoutY="236.0" prefHeight="26.0" prefWidth="110.0" />
+        <TextField fx:id="caloriesText" layoutX="403.0" layoutY="236.0" prefHeight="26.0" prefWidth="62.0" />
+        <Button layoutX="472.0" layoutY="236.0" mnemonicParsing="false" onAction="#onAddFoodAction" text="Add Food" />
+        <Label layoutX="40.0" layoutY="219.0" text="Type">
+            <font>
+                <Font name="Arial Rounded MT Bold" size="13.0" />
+            </font>
+        </Label>
+        <Label layoutX="161.0" layoutY="219.0" text="Food Name">
+            <font>
+                <Font name="Arial Rounded MT Bold" size="13.0" />
+            </font>
+        </Label>
+        <Label layoutX="403.0" layoutY="219.0" text="Calories">
+            <font>
+                <Font name="Arial Rounded MT Bold" size="13.0" />
+            </font>
+        </Label>
+        <AnchorPane layoutX="40.0" layoutY="272.0" prefHeight="142.0" prefWidth="242.0" style="-fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 5;">
+            <children>
+                <Label layoutX="9.0" layoutY="10.0" text="Breakfast">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Line endX="179.0" layoutX="57.0" layoutY="36.0" startX="-52.0" />
+                <Label fx:id="breakfastTotalCalories" layoutX="201.0" layoutY="10.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="breakfastList" layoutX="5.0" layoutY="37.0" prefHeight="101.0" prefWidth="189.0" />
+                <ListView fx:id="breakfastCals" layoutX="194.0" layoutY="37.0" prefHeight="101.0" prefWidth="43.0" />
+            </children></AnchorPane>
+        <AnchorPane layoutX="291.0" layoutY="272.0" prefHeight="142.0" prefWidth="242.0" style="-fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 5;">
+            <children>
+                <Label layoutX="9.0" layoutY="10.0" text="Lunch">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Line endX="179.0" layoutX="57.0" layoutY="36.0" startX="-52.0" />
+                <Label fx:id="lunchTotalCalories" layoutX="201.0" layoutY="10.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="lunchList" layoutX="5.0" layoutY="37.0" prefHeight="101.0" prefWidth="189.0" />
+                <ListView fx:id="lunchCals" layoutX="194.0" layoutY="37.0" prefHeight="101.0" prefWidth="43.0" />
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="40.0" layoutY="421.0" prefHeight="142.0" prefWidth="242.0" style="-fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 5;">
+            <children>
+                <Label layoutX="9.0" layoutY="10.0" text="Dinner">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Line endX="179.0" layoutX="57.0" layoutY="36.0" startX="-52.0" />
+                <Label fx:id="dinnerTotalCalories" layoutX="201.0" layoutY="10.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="dinnerList" layoutX="5.0" layoutY="37.0" prefHeight="101.0" prefWidth="189.0" />
+                <ListView fx:id="dinnerCals" layoutX="194.0" layoutY="37.0" prefHeight="101.0" prefWidth="43.0" />
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="291.0" layoutY="421.0" prefHeight="142.0" prefWidth="242.0" style="-fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 5;">
+            <children>
+                <Label layoutX="9.0" layoutY="10.0" text="Snacks">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <Line endX="179.0" layoutX="57.0" layoutY="36.0" startX="-52.0" />
+                <Label fx:id="snacksTotalCalories" layoutX="201.0" layoutY="10.0" text="0" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="13.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="snacksList" layoutX="5.0" layoutY="37.0" prefHeight="101.0" prefWidth="189.0" />
+                <ListView fx:id="snacksCals" layoutX="194.0" layoutY="37.0" prefHeight="101.0" prefWidth="43.0" />
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

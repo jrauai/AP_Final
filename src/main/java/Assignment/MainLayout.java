@@ -43,7 +43,7 @@ public class MainLayout {
         loadHomePage();
     }
 
-    private String  username="Danniel";
+    private String username = "Danniel";
 
     @FXML
     public void loadHomePage() {
@@ -84,6 +84,13 @@ public class MainLayout {
         ProfileController controller = loadPage("/Assignment/Profile.fxml");
         highlightButton(SettingsButton);
     }
+
+    @FXML
+    public void nutritionPage() {
+        NutritionController controller = loadPage("/Assignment/nutrition-view.fxml");
+        highlightButton(nutritionButton);
+    }
+
 
     public <T> T loadPage(String fxmlPath) {
         T controller = null;
