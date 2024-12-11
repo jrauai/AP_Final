@@ -40,7 +40,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="dailyActivitiesButton" mnemonicParsing="false" onAction="#loaddailyActivities" style="-fx-background-color: transparent;" text="Daily Activities">
+                        <Button fx:id="dailyActivitiesButton" mnemonicParsing="false" onAction="#loadDailyActivities" style="-fx-background-color: transparent;" text="Daily Activities">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -52,7 +52,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="stepsButton" mnemonicParsing="false" onAction="#loadStepsPage" style="-fx-background-color: transparent;" text="Steps">
+                        <Button fx:id="stepsButton" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Steps">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -64,7 +64,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="workoutButton" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Workout">
+                        <Button fx:id="workoutButton" mnemonicParsing="false" onAction="#loadExerciseLog" style="-fx-background-color: transparent;" text="Workout">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -76,7 +76,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="nutritionButton" mnemonicParsing="false" onAction="#nutritionPage" style="-fx-background-color: transparent;" text="Nutrition">
+                        <Button fx:id="nutritionButton" mnemonicParsing="false" onAction="#loadNutritionPage" style="-fx-background-color: transparent;" text="Nutrition">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>

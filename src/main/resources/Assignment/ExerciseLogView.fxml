@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Assignment.ExerciseLogController"
+            prefHeight="400.0" prefWidth="600.0" >
+    <VBox spacing="20.0" alignment="TOP_CENTER" layoutX="50.0" layoutY="30.0">
+        <Label text="Log Your Exercise" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+
+        <Label text="Exercise Type:" />
+        <TextField fx:id="exerciseTypeField" />
+
+        <Label text="Duration (minutes):" />
+        <TextField fx:id="durationField" />
+
+        <Label text="Calories Burned:" />
+        <TextField fx:id="caloriesField" />
+
+        <Button text="Log Exercise" onAction="#logExercise" />
+
+        <Label fx:id="statusLabel" style="-fx-font-weight: bold;" />
+    </VBox>
+
+</AnchorPane>
