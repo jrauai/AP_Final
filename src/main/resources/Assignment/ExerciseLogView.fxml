@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Assignment.ExerciseLogController"
-            prefHeight="400.0" prefWidth="600.0" >
-    <VBox spacing="20.0" alignment="TOP_CENTER" layoutX="50.0" layoutY="30.0">
-        <Label text="Log Your Exercise" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+<AnchorPane prefHeight="400.0" prefWidth="293.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.ExerciseLogController">
+    <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="30.0" spacing="20.0">
+        <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Log Your Exercise" />
 
         <Label text="Exercise Type:" />
-        <TextField fx:id="exerciseTypeField" />
+      <ComboBox fx:id="exerciseTypeField" promptText="Select Exercise" />
 
         <Label text="Duration (minutes):" />
         <TextField fx:id="durationField" />
@@ -22,7 +20,7 @@
         <Label text="Calories Burned:" />
         <TextField fx:id="caloriesField" />
 
-        <Button text="Log Exercise" onAction="#logExercise" />
+        <Button onAction="#logExercise" text="Log Exercise" />
 
         <Label fx:id="statusLabel" style="-fx-font-weight: bold;" />
     </VBox>
