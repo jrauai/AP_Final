@@ -81,6 +81,15 @@ public class MainLayout {
         }
     }
 
+    public void loadStepsPage() {
+        StepsController controller = loadPage("/Assignment/StepsPage.fxml");
+        highlightButton(stepsButton);
+        // Remove the call to initializeStepsData()
+        if (controller != null) {
+            controller.initialize(); // Optionally re-trigger initialization if needed
+        }
+    }
+
     @FXML
     public void loadProfilePage() {
         ProfileController controller = loadPage("/Assignment/Profile.fxml");
