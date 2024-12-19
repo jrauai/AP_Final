@@ -14,14 +14,13 @@ public class User implements Serializable {
     private String height;
     private String weight;
 
-    // Constructor to initialize the user object with essential details
+
     public User(String email, String password, String secretKey) {
         this.email = email;
         this.password = password;
         this.secretKey = secretKey;
     }
 
-    // Constructor to initialize the user with additional details like gender, DOB, etc.
     public User(String email, String password, String secretKey, String gender, String dateOfBirth, String nationality, String height, String weight) {
         this.email = email;
         this.password = password;
@@ -97,7 +96,6 @@ public class User implements Serializable {
         this.weight = weight;
     }
 
-    // Method to display user info as a string
     @Override
     public String toString() {
         return "User{" +

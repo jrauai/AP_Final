@@ -91,8 +91,8 @@ public class AdditionalInfoController {
 
     }
 
-    private String userEmail; // Store sanitized email
-    private String secretKey; // Store secret key
+    private String userEmail;
+    private String secretKey;
 
     public void setUserDetails(String email, String secretKey) {
         this.userEmail = email.replaceAll("[^a-zA-Z0-9]", "_");
@@ -104,7 +104,7 @@ public class AdditionalInfoController {
 
     private void displayQrCode() {
         if (secretKey == null || secretKey.isEmpty()) {
-            return; // Do nothing if the secret key isn't set
+            return;
         }
         // Generate QR code for the TOTP
         String totpUri = String.format("otpauth://totp/FitnessApp?secret=%s&issuer=FitnessApp", secretKey);
@@ -132,7 +132,6 @@ public class AdditionalInfoController {
         try {
             int otpCode = Integer.parseInt(otp);
             if (totpUtil.verifyCode(secretKey, otpCode)) {
-                // Retrieve additional information
                 String gender = genderComboBox.getValue() != null ? genderComboBox.getValue() : "";
                 String dob = dobPicker.getValue() != null ? dobPicker.getValue().toString() : "";
                 String nationality = nationalityDropdown.getValue() != null ? nationalityDropdown.getValue() : "";
@@ -145,23 +144,20 @@ public class AdditionalInfoController {
                     return;
                 }
 
-                // Save profile_data.txt directly in the user directory
-                Path userDir = FileManager.getUserFilePath(userEmail, ""); // Use sanitized email
-                Path profileDataFile = userDir.resolve("profile_data.txt"); // Save directly
+                Path userDir = FileManager.getUserFilePath(userEmail, "");
+                Path profileDataFile = userDir.resolve("profile_data.txt");
 
                 String content = String.format(
                         "Gender: %s%nDate of Birth: %s%nNationality: %s%nHeight: %s%nWeight: %s",
                         gender, dob, nationality, height, weight
                 );
 
-                // Write profile_data.txt
-                Files.createDirectories(userDir); // Ensure the user directory exists
+                Files.createDirectories(userDir);
                 Files.writeString(profileDataFile, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
                 messageLabel.setStyle("-fx-text-fill: green;");
                 messageLabel.setText("Additional information saved successfully!");
 
-                // Navigate to Home Page
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
                 Parent homePageRoot = loader.load();
 
@@ -170,7 +166,6 @@ public class AdditionalInfoController {
                 homeStage.setTitle("Home Page");
                 homeStage.show();
 
-                // Close the current stage
                 ((Stage) continueButton.getScene().getWindow()).close();
             } else {
                 messageLabel.setStyle("-fx-text-fill: red;");

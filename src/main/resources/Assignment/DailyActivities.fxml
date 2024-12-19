@@ -7,33 +7,37 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="587.0" prefWidth="587.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.DailyActivitiesController">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Assignment.DailyActivitiesController">
     <children>
-        <VBox alignment="CENTER" prefHeight="400" prefWidth="600" spacing="20">
-            <!-- Active Time Chart -->
-            <VBox alignment="CENTER">
-                <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Active time" />
-                <BarChart fx:id="activeTimeChart" prefHeight="200" prefWidth="500" styleClass="custom-bar-chart">
+        <VBox spacing="10" alignment="TOP_CENTER">
+            <!-- Time Filter Dropdown -->
+            <ComboBox fx:id="timeFilterComboBox" prefWidth="200" />
+
+            <!-- Charts Section -->
+            <HBox spacing="20">
+                <BarChart fx:id="activeTimeChart" title="Active Time">
                     <xAxis>
-                        <CategoryAxis fx:id="timeXAxis" label="Time of Day" />
+                        <CategoryAxis fx:id="timeXAxis" label="Exercise Type" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis fx:id="timeYAxis" label="(h)" />
+                        <NumberAxis fx:id="timeYAxis" label="Minutes" />
                     </yAxis>
                 </BarChart>
-            </VBox>
+                <BarChart fx:id="activityCaloriesChart" title="Calories Burned">
+                    <xAxis>
+                        <CategoryAxis fx:id="caloriesXAxis" label="Exercise Type" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="caloriesYAxis" label="Calories" />
+                    </yAxis>
+                </BarChart>
+            </HBox>
 
-            <!-- Activity Calories Chart -->
-            <VBox alignment="CENTER" />
+            <!-- Daily Summary -->
+            <Label fx:id="dailySummaryLabel" style="-fx-font-size: 16px;" text="Summary will appear here." />
         </VBox>
-          <BarChart fx:id="activityCaloriesChart" layoutY="427.0" prefHeight="200" prefWidth="600.0" styleClass="custom-bar-chart">
-              <xAxis>
-                  <CategoryAxis fx:id="caloriesXAxis" label="Time of Day" />
-              </xAxis>
-              <yAxis>
-                  <NumberAxis fx:id="caloriesYAxis" label="(h)" />
-              </yAxis>
-          </BarChart>
-          <Label layoutX="245.0" layoutY="392.0" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Activity calories" />
     </children>
 </AnchorPane>
+

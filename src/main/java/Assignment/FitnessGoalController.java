@@ -33,7 +33,7 @@ public class FitnessGoalController {
             System.err.println("Error: Email cannot be null or empty in FitnessGoalController.");
             return;
         }
-        this.username = email; // Use the sanitized email directly
+        this.username = email;
         loadOrInitializeFitnessGoals();
     }
 
@@ -72,7 +72,6 @@ public class FitnessGoalController {
     }
 
 
-    // Initialize fields with default values for new users
     private void initializeNewUserFields() {
         initialWeightField.setText("");
         currentWeightField.setText("");
@@ -85,7 +84,6 @@ public class FitnessGoalController {
         progressLabel.setText("0% Completed");
     }
 
-    // Load fitness goals from file
     private void loadFitnessGoalsFromFile(Path filePath) {
         try (Scanner scanner = new Scanner(filePath)) {
             while (scanner.hasNextLine()) {
@@ -114,10 +112,8 @@ public class FitnessGoalController {
         Path filePath = FileManager.getUserFilePath(username, "fitnessGoals.txt");
 
         try {
-            // Ensure the parent directory exists
             Files.createDirectories(filePath.getParent());
 
-            // Write the file
             try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 writer.write("Initial Weight: " + initialWeightField.getText());
                 writer.newLine();
@@ -143,9 +139,6 @@ public class FitnessGoalController {
         }
     }
 
-
-
-    // Calculate progress based on weight
     public void calculateWeightProgress() {
         try {
             double initialWeight = Double.parseDouble(initialWeightField.getText().trim());

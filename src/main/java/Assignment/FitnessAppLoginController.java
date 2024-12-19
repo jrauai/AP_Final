@@ -31,7 +31,7 @@ public class FitnessAppLoginController {
     private Label signUpMessage, logInMessage;
 
 
-    // Sign-Up Logic
+    // Sign-Up
     @FXML
     private void handleSignUp() {
         String name = signUpName.getText();
@@ -54,26 +54,20 @@ public class FitnessAppLoginController {
             User newUser = new User(email, password, secretKey);
             userStorage.addUser(newUser);
 
-            // Create a user file
             createUserFile(name, email, password, secretKey);
 
-            // Navigate to AdditionalInfoController
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("AdditionalInfo.fxml"));
                 Parent root = loader.load();
 
-                // Pass secretKey to AdditionalInfoController
                 AdditionalInfoController additionalInfoController = loader.getController();
                 additionalInfoController.setUserDetails(email, secretKey);
-
-
 
                 Stage stage = new Stage();
                 stage.setTitle("Additional Information");
                 stage.setScene(new Scene(root));
                 stage.show();
 
-                // Close the current window
                 ((Stage) signUpName.getScene().getWindow()).close();
             } catch (IOException e) {
                 signUpMessage.setStyle("-fx-text-fill: red;");
@@ -83,7 +77,7 @@ public class FitnessAppLoginController {
         }
     }
 
-    // Sign-In Logic
+    // Log-In
     @FXML
     private void handleLogIn() {
         String email = logInEmail.getText();
@@ -94,43 +88,36 @@ public class FitnessAppLoginController {
             logInMessage.setText("All fields are required.");
         } else {
             try {
-                // Use sanitized email to find the file
                 Path filePath = FileManager.getUserFilePath(email, "userdata.txt");
 
                 if (Files.exists(filePath)) {
-                    // Read the file content
                     String fileContent = Files.readString(filePath);
                     String storedPassword = extractField(fileContent, "Password");
                     String secretKey = extractField(fileContent, "SecretKey");
 
-                    // Verify password
                     if (!password.equals(storedPassword)) {
                         logInMessage.setText("Invalid password.");
                         return;
                     }
 
-                    // Verify OTP
                     int otpCode = Integer.parseInt(otp);
                     if (otpCode == 12345 || totpUtil.verifyCode(secretKey, otpCode)) {
                         logInMessage.setStyle("-fx-text-fill: green;");
                         logInMessage.setText("Sign-in successful!");
 
-                        // Extract Name for username
                         String name = extractField(fileContent, "Name");
 
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
                         Parent root = loader.load();
 
-                        // Pass user email to MainLayout
                         MainLayout mainLayoutController = loader.getController();
-                        mainLayoutController.setUserEmail(email); // Pass the email
+                        mainLayoutController.setUserEmail(email);
 
                         Stage stage = new Stage();
                         stage.setScene(new Scene(root));
                         stage.setTitle("Main Layout");
                         stage.show();
 
-                        // Close the current login window
                         ((Stage) logInEmail.getScene().getWindow()).close();
 
                     } else {
@@ -148,8 +135,6 @@ public class FitnessAppLoginController {
         }
     }
 
-
-    // Helper method to extract fields from file content
     private String extractField(String content, String fieldName) {
         for (String line : content.split("\n")) {
             if (line.startsWith(fieldName + ":")) {
@@ -160,7 +145,6 @@ public class FitnessAppLoginController {
     }
 
 
-    // Helper Methods
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -178,17 +162,14 @@ public class FitnessAppLoginController {
 
     private void createUserFile(String name, String email, String password, String secretKey) {
         try {
-            // Ensure user directory exists
             FileManager.ensureUserDirectoryExists(email);
 
-            // Create userdata.txt
             String sanitizedEmail = email.replaceAll("[^a-zA-Z0-9]", "_");
             Path userdataPath = FileManager.getUserFilePath(sanitizedEmail, "userdata.txt");
             Files.writeString(userdataPath,
                     String.format("Name: %s%nEmail: %s%nPassword: %s%nSecretKey: %s", name, email, password, secretKey),
                     StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
-            // Initialize default files
             initializeUserFiles(sanitizedEmail);
 
         } catch (IOException e) {
@@ -197,7 +178,6 @@ public class FitnessAppLoginController {
         }
     }
 
-    // Method to initialize default files
     private void initializeUserFiles(String sanitizedEmail) throws IOException {
         Path fitnessGoalsPath = FileManager.getUserFilePath(sanitizedEmail, "fitnessGoals.txt");
         Path exerciseLogPath = FileManager.getUserFilePath(sanitizedEmail, "exerciseLog.txt");

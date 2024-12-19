@@ -46,22 +46,19 @@ public class ProfileController {
     @FXML
     private DatePicker dobPicker;
 
-    private String username; // Added declaration for username
+    private String username;
     private String profilePicturePath;
     private final String BASE_DIRECTORY = "src/main/java/Assignment/File IO";
 
     @FXML
     public void initialize() {
-        // Populate gender options
         genderComboBox.getItems().addAll("Male", "Female");
 
-        // Populate nationality dropdown
         for (String country : Locale.getISOCountries()) {
             Locale locale = new Locale("", country);
             nationalityDropdown.getItems().add(locale.getDisplayCountry());
         }
 
-        // Handle button actions
         changePictureButton.setOnAction(event -> changeProfilePicture());
         updateProfileButton.setOnAction(event -> saveProfileData());
     }

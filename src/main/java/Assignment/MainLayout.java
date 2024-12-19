@@ -84,27 +84,37 @@ public class MainLayout{
         }
 
         String sanitizedEmail = sanitizeEmail(userEmail);
-        Path userDirectory = Paths.get("src", "main", "java", "Assignment", "File IO", sanitizedEmail  + "_data");
+        Path userDirectory = Paths.get("src", "main", "java", "Assignment", "File IO", sanitizedEmail + "_data");
 
         if (!Files.exists(userDirectory)) {
             System.err.println("User directory does not exist: " + userDirectory.toAbsolutePath());
             return;
         }
 
-        Path registrationFile = userDirectory.resolve(sanitizedEmail  + "_registration.txt");
-        try (BufferedReader reader = Files.newBufferedReader(registrationFile)) {
-            String nameLine = reader.readLine();
-            String emailLine = reader.readLine();
-            String passwordLine = reader.readLine();
+        Path userDataFile = userDirectory.resolve("userdata.txt");
 
-            if (nameLine != null && nameLine.startsWith("Name: ")) {
-                this.username = nameLine.split(": ")[1].trim();
-                System.out.println("Loaded username: " + this.username); // Debugging
+        try {
+            if (!Files.exists(userDataFile)) {
+                System.err.println("userdata.txt not found. Creating a new one...");
+                Files.createFile(userDataFile);
+                Files.writeString(userDataFile, "Name: Default\nEmail: Default\nPassword: Default\n");
             }
 
-            // Update the HomePage with the username
+            try (BufferedReader reader = Files.newBufferedReader(userDataFile)) {
+                String nameLine = reader.readLine();
+                String emailLine = reader.readLine();
+                String passwordLine = reader.readLine();
+
+                if (nameLine != null && nameLine.startsWith("Name: ")) {
+                    this.username = nameLine.split(": ")[1].trim();
+                    System.out.println("Loaded username: " + this.username); // Debugging
+                }
+            }
+
             loadHomePage();
+
         } catch (IOException e) {
+            System.err.println("Error while accessing or creating userdata.txt.");
             e.printStackTrace();
         }
     }
@@ -114,7 +124,7 @@ public class MainLayout{
         HomePageController controller = loadPage("/Assignment/HomePage.fxml");
         highlightButton(homeButton);
         if (controller != null) {
-            controller.setUserEmail(userEmail); // Pass the email, not username
+            controller.setUserEmail(userEmail);
             controller.loadFitnessGoalToHome();
             controller.loadExerciseToHome();
             controller.loadNutritionToHome();
@@ -146,14 +156,11 @@ public class MainLayout{
 
         if (controller != null) {
             String sanitizedEmail = sanitizeEmail(userEmail);
-            controller.setUsername(sanitizedEmail); // Use sanitized email instead of username
+            controller.setUsername(sanitizedEmail);
         } else {
             System.err.println("Error: Failed to load FitnessGoalController.");
         }
     }
-
-
-
 
 
     public void loadStepsPage() {
@@ -214,7 +221,6 @@ public class MainLayout{
         SettingsButton.setStyle("-fx-background-color: transparent;");
         searchButton.setStyle("-fx-background-color: transparent;");
         logOutButton.setStyle("-fx-background-color: transparent;");
-
 
         selectedButton.setStyle("-fx-background-color: #d0d0d0;");
 

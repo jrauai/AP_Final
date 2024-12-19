@@ -1,0 +1,3 @@
+Name: Danny
+Email: Danniel16@Taylors.com
+Password: Danny1234

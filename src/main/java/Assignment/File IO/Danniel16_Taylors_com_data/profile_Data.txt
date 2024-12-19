@@ -1,0 +1,5 @@
+Gender: Female
+Date of Birth: 2024-12-12
+Nationality: Antigua & Barbuda
+Height: 67
+Weight: 567

@@ -32,7 +32,6 @@ public class ExerciseLogController {
 
     @FXML
     public void initialize() {
-        // Populate the ComboBox with available exercise types
         exerciseTypeField.getItems().addAll(exerciseTypes);
     }
 
@@ -63,5 +62,9 @@ public class ExerciseLogController {
 
     public List<ExerciseLog> getExerciseLogs() {
         return exerciseLogs;
+    }
+
+    public List<ExerciseLog> getExerciseLogsByFilter(String selectedFilter) {
+        return List.of();
     }
 }

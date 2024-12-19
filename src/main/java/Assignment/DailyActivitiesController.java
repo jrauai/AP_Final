@@ -5,6 +5,9 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
+import java.util.List;
 
 public class DailyActivitiesController {
 
@@ -27,27 +30,53 @@ public class DailyActivitiesController {
     private NumberAxis caloriesYAxis;
 
     @FXML
+    private ComboBox<String> timeFilterComboBox;
+
+    @FXML
+    private Label dailySummaryLabel;
+
+    private final ExerciseLogController exerciseLogController = new ExerciseLogController();
+
+    @FXML
     public void initialize() {
-        // Active Time Data
+        // Populate time filter options
+        timeFilterComboBox.getItems().addAll("Today", "This Week", "This Month");
+        timeFilterComboBox.setValue("Today");
+
+        timeFilterComboBox.setOnAction(event -> updateCharts());
+
+        // Load initial data
+        updateCharts();
+    }
+
+    private void updateCharts() {
+        String selectedFilter = timeFilterComboBox.getValue();
+
+        // Clear existing data
+        activeTimeChart.getData().clear();
+        activityCaloriesChart.getData().clear();
+
+        // Retrieve exercise logs based on the selected filter
+        List<ExerciseLog> filteredLogs = exerciseLogController.getExerciseLogsByFilter(selectedFilter);
+
         XYChart.Series<String, Number> activeTimeSeries = new XYChart.Series<>();
-        activeTimeSeries.getData().add(new XYChart.Data<>("12 am", 0.5));
-        activeTimeSeries.getData().add(new XYChart.Data<>("6 am", 0.2));
-        activeTimeSeries.getData().add(new XYChart.Data<>("12 pm", 3.0));
-        activeTimeSeries.getData().add(new XYChart.Data<>("6 pm", 1.0));
-        activeTimeChart.getData().add(activeTimeSeries);
-        activeTimeChart.setLegendVisible(false);
-
-        // Activity Calories Data
         XYChart.Series<String, Number> caloriesSeries = new XYChart.Series<>();
-        caloriesSeries.getData().add(new XYChart.Data<>("12 am", 50));
-        caloriesSeries.getData().add(new XYChart.Data<>("6 am", 100));
-        caloriesSeries.getData().add(new XYChart.Data<>("12 pm", 500));
-        caloriesSeries.getData().add(new XYChart.Data<>("6 pm", 200));
-        activityCaloriesChart.getData().add(caloriesSeries);
-        activityCaloriesChart.setLegendVisible(false);
 
-        // Style customization
-        customizeCharts();
+        double totalActiveTime = 0;
+        double totalCaloriesBurned = 0;
+
+        for (ExerciseLog log : filteredLogs) {
+            activeTimeSeries.getData().add(new XYChart.Data<>(log.getExerciseType(), log.getDuration()));
+            caloriesSeries.getData().add(new XYChart.Data<>(log.getExerciseType(), log.getCaloriesBurned()));
+            totalActiveTime += log.getDuration();
+            totalCaloriesBurned += log.getCaloriesBurned();
+        }
+
+        activeTimeChart.getData().add(activeTimeSeries);
+        activityCaloriesChart.getData().add(caloriesSeries);
+
+        // Update daily summary
+        dailySummaryLabel.setText(String.format("Total Active Time: %.1f minutes\nTotal Calories Burned: %.1f", totalActiveTime, totalCaloriesBurned));
     }
 
     private void customizeCharts() {

@@ -7,8 +7,6 @@ import java.util.List;
 public class UserStorage {
     private static final String FILE_NAME = "src/main/java/Assignment/File IO/users.txt";
 
-
-    // Load all users from the file into a list
     public List<User> loadUsers() {
         List<User> users = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -35,7 +33,6 @@ public class UserStorage {
         return users;
     }
 
-    // Save a single user to the file
     public void saveUsers(List<User> users) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (User user : users) {
@@ -57,10 +54,8 @@ public class UserStorage {
         }
     }
 
-
-    // Add user to storage
     public void addUser(User user) {
-        if (getUserByEmail(user.getEmail()) == null) { // Avoid duplicate users
+        if (getUserByEmail(user.getEmail()) == null) {
             saveUser(user);
         } else {
             System.err.println("User with email " + user.getEmail() + " already exists.");
@@ -88,16 +83,16 @@ public class UserStorage {
                 return user;
             }
         }
-        return null; // Return null if no user is found with the given secretKey
+        return null;
     }
     public String getEmailBySecretKey(String secretKey) {
-        List<User> users = loadUsers(); // Correctly load users
+        List<User> users = loadUsers();
         for (User user : users) {
             if (user.getSecretKey().equals(secretKey)) {
                 return user.getEmail();
             }
         }
-        return null; // Return null if no user is found with the secretKey
+        return null;
     }
 
 }

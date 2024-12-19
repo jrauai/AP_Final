@@ -48,7 +48,7 @@ public class NutritionController {
             System.err.println("Error: Email cannot be null or empty in NutritionController.");
             return;
         }
-        this.username = email; // Use the sanitized email directly
+        this.username = email;
         loadOrInitializeNutrition();
     }
 
@@ -57,7 +57,6 @@ public class NutritionController {
             System.err.println("Error: Email cannot be null or empty in NutritionController.");
             return;
         }
-
         try {
             FileManager.ensureUserDirectoryExists(username);
             Path filePath = FileManager.getUserFilePath(username, "Nutrition.txt");
@@ -90,7 +89,6 @@ public class NutritionController {
                     goalCaloriesLabel.setText(line.split(":")[1].trim());
                 }
             }
-
             updateProgressAndLabels();
 
         } catch (Exception e) {
@@ -119,7 +117,7 @@ public class NutritionController {
         int startIndex = lines.indexOf(header) + 1;
         for (int i = startIndex; i < lines.size(); i++) {
             String line = lines.get(i);
-            if (line.trim().isEmpty()) break; // Stop at the next section
+            if (line.trim().isEmpty()) break;
             String[] parts = line.split(" - ");
             if (parts.length == 2) {
                 foodList.add(parts[0].trim());
@@ -127,7 +125,6 @@ public class NutritionController {
             }
         }
     }
-
 
     private double currentProgress = 0.0;
 
@@ -197,7 +194,7 @@ public class NutritionController {
 
         if (!foodName.isEmpty() && !calorieValue.isEmpty()) {
             try {
-                Integer.parseInt(calorieValue); // Validate calories as a number
+                Integer.parseInt(calorieValue);
                 foodList.add(foodName);
                 calorieList.add(calorieValue);
                 foodInput.clear();
