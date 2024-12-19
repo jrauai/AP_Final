@@ -14,12 +14,15 @@ import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class AdditionalInfoController {
 
     // QR Code and OTP functionality
-    private String secretKey; // Secret key generated during registration
     private final GoogleTotpUtil totpUtil = new GoogleTotpUtil();
 
     @FXML
@@ -86,14 +89,18 @@ public class AdditionalInfoController {
         // Populate gender dropdown
         genderComboBox.getItems().addAll("Male", "Female");
 
-        // Configure QR Code display (if the secret key is set)
-        displayQrCode();
     }
 
-    public void setSecretKey(String secretKey) {
+    private String userEmail; // Store sanitized email
+    private String secretKey; // Store secret key
+
+    public void setUserDetails(String email, String secretKey) {
+        this.userEmail = email.replaceAll("[^a-zA-Z0-9]", "_");
         this.secretKey = secretKey;
         displayQrCode();
     }
+
+
 
     private void displayQrCode() {
         if (secretKey == null || secretKey.isEmpty()) {
@@ -126,39 +133,33 @@ public class AdditionalInfoController {
             int otpCode = Integer.parseInt(otp);
             if (totpUtil.verifyCode(secretKey, otpCode)) {
                 // Retrieve additional information
-                String gender = genderComboBox.getValue();
+                String gender = genderComboBox.getValue() != null ? genderComboBox.getValue() : "";
                 String dob = dobPicker.getValue() != null ? dobPicker.getValue().toString() : "";
-                String nationality = nationalityDropdown.getValue();
+                String nationality = nationalityDropdown.getValue() != null ? nationalityDropdown.getValue() : "";
                 String height = heightField.getText();
                 String weight = weightField.getText();
 
-                // Load user data from storage
-                UserStorage userStorage = new UserStorage();
-                User user = userStorage.getUserBySecretKey(secretKey);
-
-                if (user != null) {
-                    // Update user information
-                    user.setGender(gender);
-                    user.setDateOfBirth(dob);
-                    user.setNationality(nationality);
-                    user.setHeight(height);
-                    user.setWeight(weight);
-
-                    // Save the updated user to the file
-                    List<User> users = userStorage.loadUsers();
-                    for (int i = 0; i < users.size(); i++) {
-                        if (users.get(i).getSecretKey().equals(secretKey)) {
-                            users.set(i, user);
-                            break;
-                        }
-                    }
-                    //userStorage.saveUsers(users);
-                    messageLabel.setStyle("-fx-text-fill: green;");
-                    messageLabel.setText("Data saved successfully!");
-                } else {
+                if (!height.matches("\\d+(\\.\\d+)?") || !weight.matches("\\d+(\\.\\d+)?")) {
                     messageLabel.setStyle("-fx-text-fill: red;");
-                    messageLabel.setText("User not found.");
+                    messageLabel.setText("Height and weight must be valid numbers.");
+                    return;
                 }
+
+                // Save profile_data.txt directly in the user directory
+                Path userDir = FileManager.getUserFilePath(userEmail, ""); // Use sanitized email
+                Path profileDataFile = userDir.resolve("profile_data.txt"); // Save directly
+
+                String content = String.format(
+                        "Gender: %s%nDate of Birth: %s%nNationality: %s%nHeight: %s%nWeight: %s",
+                        gender, dob, nationality, height, weight
+                );
+
+                // Write profile_data.txt
+                Files.createDirectories(userDir); // Ensure the user directory exists
+                Files.writeString(profileDataFile, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("Additional information saved successfully!");
 
                 // Navigate to Home Page
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
@@ -178,11 +179,14 @@ public class AdditionalInfoController {
         } catch (NumberFormatException e) {
             messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("OTP must be a numeric value.");
+        } catch (IOException e) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("Failed to save additional information.");
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("Failed to load Home Page.");
         }
     }
-
 }

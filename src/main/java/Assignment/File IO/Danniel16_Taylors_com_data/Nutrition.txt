@@ -1,0 +1,12 @@
+GoalCalories: 1500
+
+Breakfast:
+
+Lunch:
+ff - 69 calories
+
+Dinner:
+chicken - 700 calories
+
+Snack:
+

@@ -1,38 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="913.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePageController">
     <children>
         <VBox prefHeight="650.0" prefWidth="1111.0">
             <children>
                 <HBox alignment="CENTER" prefHeight="151.0" prefWidth="970.0" style="-fx-background-color: #FFFAF0;">
                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back " />
-                        <Label fx:id="welcomeHome" text="&lt;Username&gt;" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back " textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="31.0" />
+                     </font>
+                     <rotationAxis>
+                        <Point3D />
+                     </rotationAxis></Text>
+                        <Label fx:id="welcomeHome" text="&lt;Username&gt;" textAlignment="CENTER">
+                     <font>
+                        <Font name="Bodoni MT Black" size="31.0" />
+                     </font>
+                     <rotationAxis>
+                        <Point3D />
+                     </rotationAxis></Label>
                     </children>
                 </HBox>
                 <HBox prefHeight="47.0" prefWidth="1020.0" />
-                <HBox prefHeight="144.0" prefWidth="1020.0">
+                <HBox>
                     <children>
                         <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #F0F8FF;">
                             <children>
                                 <VBox alignment="CENTER" prefHeight="144.0" prefWidth="204.0">
                                     <children>
-                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Weight difference in this month" underline="true" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Weight difference in this month" underline="true">
+                                 <font>
+                                    <Font name="Cascadia Code Regular" size="12.0" />
+                                 </font>
+                              </Text>
                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Initial Weight: " />
-                                        <Label fx:id="initialWeightHome" text="(kg)" />
+                              <HBox alignment="CENTER" prefHeight="17.0" prefWidth="138.0">
+                                 <children>
+                                              <Label fx:id="initialWeightHome" text="(kg)" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG" />
+                                 </children>
+                              </HBox>
                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current Weight: " />
-                                        <Label fx:id="currentWeightHome" text="(kg)" />
+                              <HBox alignment="CENTER" prefHeight="15.0" prefWidth="218.0">
+                                 <children>
+                                              <Label fx:id="currentWeightHome" text="(kg)" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG" />
+                                 </children>
+                              </HBox>
                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TargetWeight: " />
-                                        <Label fx:id="targetWeightHome" text="(kg)" />
+                              <HBox alignment="CENTER" prefHeight="14.0" prefWidth="218.0">
+                                 <children>
+                                              <Label fx:id="targetWeightHome" text="(kg)" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG" />
+                                 </children>
+                              </HBox>
                                     </children>
+                           <effect>
+                              <Glow />
+                           </effect>
                                 </VBox>
                             </children>
                         </HBox>
@@ -41,7 +78,10 @@
                             <children>
                                 <VBox alignment="CENTER" prefHeight="144.0" prefWidth="225.0" style="-fx-background-color: #FAEBD7;">
                                     <children>
-                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise Logging" underline="true" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise Logging" underline="true">
+                                 <font>
+                                    <Font name="Cascadia Code Regular" size="17.0" />
+                                 </font></Text>
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                             <children>
                                                 <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
@@ -76,6 +116,9 @@
                                             </children>
                                         </HBox>
                                     </children>
+                           <effect>
+                              <Glow />
+                           </effect>
                                 </VBox>
                             </children>
                         </HBox>
@@ -84,7 +127,10 @@
                             <children>
                                 <VBox alignment="CENTER" prefHeight="144.0" prefWidth="200.0" style="-fx-background-color: #FAFAD2;">
                                     <children>
-                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nutrition Logging" underline="true" />
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nutrition Logging" underline="true">
+                                 <font>
+                                    <Font name="Cascadia Code Regular" size="18.0" />
+                                 </font></Text>
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                             <children>
                                                 <ImageView fitHeight="40.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
@@ -95,6 +141,9 @@
                                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Calories: " />
                                                 <Label fx:id="foodCalorieHome" text="Total Calories" />
                                             </children>
+                                 <effect>
+                                    <Glow />
+                                 </effect>
                                         </HBox>
                                     </children>
                                 </VBox>
@@ -102,7 +151,7 @@
                         </HBox>
                     </children>
                 </HBox>
-                <HBox prefHeight="65.0" prefWidth="1020.0" />
+                <HBox prefHeight="47.0" prefWidth="932.0" />
                 <HBox alignment="CENTER" prefHeight="153.0" prefWidth="1020.0" style="-fx-background-color: #DCDCDC;">
                     <children>
                         <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
@@ -128,7 +177,6 @@
                                 <Image url="@AP_Image/Streching.png" />
                             </image>
                         </ImageView>
-                        <VBox prefHeight="200.0" prefWidth="100.0" />
                     </children>
                 </HBox>
                 <VBox prefHeight="200.0" prefWidth="100.0" />

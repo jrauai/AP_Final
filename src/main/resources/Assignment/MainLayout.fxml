@@ -10,11 +10,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.MainLayout">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.MainLayout">
     <children>
         <BorderPane layoutX="24.0" layoutY="24.0" prefHeight="650.0" prefWidth="1100.0">
             <left>
-                <VBox prefHeight="650.0" prefWidth="213.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+                <VBox prefHeight="660.0" prefWidth="213.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                     <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jéfis Fatte">
                             <font>
@@ -28,7 +28,7 @@
                             </font>
                         </Text>
                         <VBox prefHeight="39.0" prefWidth="134.0" />
-                        <Button fx:id="homeButton" mnemonicParsing="false" onAction="#loadHomePage" style="-fx-background-color: transparent;" text="Home">
+                        <Button fx:id="homeButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadHomePage" prefHeight="23.0" prefWidth="215.0" style="-fx-background-color: transparent;" text="Home">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -40,7 +40,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="dailyActivitiesButton" mnemonicParsing="false" onAction="#loadDailyActivities" style="-fx-background-color: transparent;" text="Daily Activities">
+                        <Button fx:id="dailyActivitiesButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadDailyActivities" prefHeight="23.0" prefWidth="221.0" style="-fx-background-color: transparent;" text="Daily Activities">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -52,7 +52,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="stepsButton" mnemonicParsing="false" onAction="#loadStepsPage" style="-fx-background-color: transparent;" text="Steps">
+                        <Button fx:id="stepsButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadStepsPage" prefHeight="23.0" prefWidth="218.0" style="-fx-background-color: transparent;" text="Steps">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -64,7 +64,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="workoutButton" mnemonicParsing="false" onAction="#loadExerciseLog" style="-fx-background-color: transparent;" text="Workout">
+                        <Button fx:id="workoutButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadExerciseLog" prefHeight="23.0" prefWidth="218.0" style="-fx-background-color: transparent;" text="Workout">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -76,7 +76,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="nutritionButton" mnemonicParsing="false" onAction="#loadNutritionPage" style="-fx-background-color: transparent;" text="Nutrition">
+                        <Button fx:id="nutritionButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadNutritionPage" prefHeight="23.0" prefWidth="215.0" style="-fx-background-color: transparent;" text="Nutrition">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -88,7 +88,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="fitnessGoalButton" mnemonicParsing="false" onAction="#loadFitnessGoalPage" style="-fx-background-color: transparent;" text="FitnessGoal">
+                        <Button fx:id="fitnessGoalButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadFitnessGoalPage" prefHeight="23.0" prefWidth="214.0" style="-fx-background-color: transparent;" text="FitnessGoal">
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -100,7 +100,7 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <Button fx:id="SettingsButton" mnemonicParsing="false" onAction="#loadProfilePage" style="-fx-background-color: transparent;" text="Settings">
+                        <Button fx:id="SettingsButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadProfilePage" prefHeight="24.0" prefWidth="216.0" style="-fx-background-color: transparent;" text="Settings">
                             <graphic>
                                 <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -112,8 +112,20 @@
                                 <Font name="Arial" size="12.0" />
                             </font>
                         </Button>
-                        <VBox prefHeight="337.0" prefWidth="133.0" />
-                        <Button fx:id="logOutButton" mnemonicParsing="false" style="-fx-background-color: 0;" text="Log Out" textFill="#0000008c">
+                  <Button fx:id="searchButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#loadSearchPage" prefHeight="24.0" prefWidth="216.0" style="-fx-background-color: transparent;" text="Search friends">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@AP_Image/magnifying-glass-icon-13.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Button>
+                        <VBox prefHeight="285.0" prefWidth="213.0" />
+                        <Button fx:id="logOutButton" mnemonicParsing="false" style="-fx-background-color: #d0d0d0;" text="Log Out" textFill="#0000008c">
                             <font>
                                 <Font name="Arial" size="10.0" />
                             </font>
@@ -123,7 +135,7 @@
                 </VBox>
             </left>
             <center>
-                <StackPane id="mainContentPane" fx:id="mainContentPane" prefHeight="650.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+                <StackPane id="mainContentPane" fx:id="mainContentPane" BorderPane.alignment="CENTER" />
             </center>
         </BorderPane>
     </children>

@@ -90,4 +90,14 @@ public class UserStorage {
         }
         return null; // Return null if no user is found with the given secretKey
     }
+    public String getEmailBySecretKey(String secretKey) {
+        List<User> users = loadUsers(); // Correctly load users
+        for (User user : users) {
+            if (user.getSecretKey().equals(secretKey)) {
+                return user.getEmail();
+            }
+        }
+        return null; // Return null if no user is found with the secretKey
+    }
+
 }

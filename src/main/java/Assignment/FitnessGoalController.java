@@ -7,6 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
 public class FitnessGoalController {
@@ -15,25 +18,7 @@ public class FitnessGoalController {
     private StackPane mainContentPane;
 
     @FXML
-    private TextField currentWeightField;
-
-    @FXML
-    private TextField targetWeightField;
-
-    @FXML
-    private TextField chestField;
-
-    @FXML
-    private TextField waistField;
-
-    @FXML
-    private TextField hipField;
-
-    @FXML
-    private TextField targetCalorieField;
-
-    @FXML
-    private TextField initialWeightField;
+    private TextField currentWeightField, targetWeightField, chestField, waistField, hipField, targetCalorieField, initialWeightField;
 
     @FXML
     private ProgressBar goalprogressBar;
@@ -42,112 +27,141 @@ public class FitnessGoalController {
     private Label progressLabel;
 
     private String username;
-    public void setUsername(String username) {
-        this.username=username;
-    }
 
-
-    //Progress Bar (weight)
-    public void calculateWeightProgress(){
-        try {
-            double currentWeight = Double.parseDouble(currentWeightField.getText().trim());
-            double targetWeight = Double.parseDouble(targetWeightField.getText().trim());
-            double initialWeight = Double.parseDouble(initialWeightField.getText().trim());
-            double weightToLoss = initialWeight - targetWeight;
-            double progress = 0;
-
-            if (initialWeight == currentWeight){
-                progress = 0;
-            }
-            else if (currentWeight > targetWeight) {
-                progress = Math.abs(initialWeight-currentWeight)/weightToLoss;
-            } else{
-                progress=1;
-            }
-
-            progress=Math.min(1.0, Math.max(0.0, progress));
-            goalprogressBar.setProgress(progress);
-            progressLabel.setText(String.format("%.0f%% Completed", progress*100));
-
-        }catch (NumberFormatException e){
-            System.out.println("Invalid input: Please enter valid numbers for weights.");
+    public void setUsername(String email) {
+        if (email == null || email.isEmpty()) {
+            System.err.println("Error: Email cannot be null or empty in FitnessGoalController.");
+            return;
         }
+        this.username = email; // Use the sanitized email directly
+        loadOrInitializeFitnessGoals();
     }
 
 
-    public void saveFitnessGoalsToFile(){
-        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
-            writer.write("Initial Weight: " + initialWeightField.getText());
-            writer.newLine();
-            writer.write("Current Weight: " + currentWeightField.getText());
-            writer.newLine();
-            writer.write("Target Weight: " + targetWeightField.getText());
-            writer.newLine();
-            writer.write("Chest: " + chestField.getText());
-            writer.newLine();
-            writer.write("Waist: " + waistField.getText());
-            writer.newLine();
-            writer.write("Hips: " + hipField.getText());
-            writer.newLine();
-            writer.write("Calories: " +targetCalorieField.getText());
-            writer.newLine();
-            System.out.println("Goals saved successfully.");
+    private void loadOrInitializeFitnessGoals() {
+        if (username == null || username.isEmpty()) {
+            System.err.println("Error: User email is not initialized. Cannot load FitnessGoal page.");
+            return;
 
-            calculateWeightProgress();
+        }
+
+        try {
+            FileManager.ensureUserDirectoryExists(username);
+            Path filePath = FileManager.getUserFilePath(username, "fitnessGoals.txt");
+
+            if (Files.exists(filePath)) {
+                loadFitnessGoalsFromFile(filePath);
+            } else {
+                initializeNewUserFields();
+            }
         } catch (IOException e) {
+            System.err.println("Error ensuring user directory exists for fitness goals.");
             e.printStackTrace();
         }
+    }
 
+    private void initializeUserFiles(String sanitizedEmail) throws IOException {
+        Path fitnessGoalsPath = FileManager.getUserFilePath(sanitizedEmail, "fitnessGoals.txt");
+        Path exerciseLogPath = FileManager.getUserFilePath(sanitizedEmail, "exerciseLog.txt");
+        Path nutritionPath = FileManager.getUserFilePath(sanitizedEmail, "Nutrition.txt");
+
+        Files.writeString(fitnessGoalsPath, "Initial Weight: 0.0\nCurrent Weight: 0.0\nTarget Weight: 0.0\n");
+        Files.writeString(exerciseLogPath, "Exercise Number: 0\nDuration: 0\nExercise Calories: 0\n");
+        Files.writeString(nutritionPath, "GoalCalories: 1500\n");
     }
 
 
-    @FXML
-    public void loadFitnessGoalsFromFile() {
-        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
+    // Initialize fields with default values for new users
+    private void initializeNewUserFields() {
+        initialWeightField.setText("");
+        currentWeightField.setText("");
+        targetWeightField.setText("");
+        chestField.setText("");
+        waistField.setText("");
+        hipField.setText("");
+        targetCalorieField.setText("");
+        goalprogressBar.setProgress(0.0);
+        progressLabel.setText("0% Completed");
+    }
 
-        try (Scanner scanner = new Scanner(file)) {
-
-            initialWeightField.setText("0.0");
-            currentWeightField.setText("0.0");
-            targetWeightField.setText("0.0");
-            chestField.setText("0.0");
-            waistField.setText("0.0");
-            hipField.setText("0.0");
-            targetCalorieField.setText("0.0");
-
+    // Load fitness goals from file
+    private void loadFitnessGoalsFromFile(Path filePath) {
+        try (Scanner scanner = new Scanner(filePath)) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.contains(": ")) {
-                    String[] parts = line.split(": ");
-                    if (parts.length > 1) {
-                        if (line.startsWith("Initial Weight")) {
-                            initialWeightField.setText(parts[1].trim());
-                        } else if (line.startsWith("Current Weight")) {
-                            currentWeightField.setText(parts[1].trim());
-                        } else if (line.startsWith("Target Weight")) {
-                            targetWeightField.setText(parts[1].trim());
-                        } else if (line.startsWith("Chest")) {
-                            chestField.setText(parts[1].trim());
-                        } else if (line.startsWith("Waist")) {
-                            waistField.setText(parts[1].trim());
-                        } else if (line.startsWith("Hips")) {
-                            hipField.setText(parts[1].trim());
-                        } else if (line.startsWith("Calories")) {
-                            targetCalorieField.setText(parts[1].trim());
-                        }
+                String[] parts = scanner.nextLine().split(": ");
+                if (parts.length > 1) {
+                    switch (parts[0]) {
+                        case "Initial Weight": initialWeightField.setText(parts[1].trim()); break;
+                        case "Current Weight": currentWeightField.setText(parts[1].trim()); break;
+                        case "Target Weight": targetWeightField.setText(parts[1].trim()); break;
+                        case "Chest": chestField.setText(parts[1].trim()); break;
+                        case "Waist": waistField.setText(parts[1].trim()); break;
+                        case "Hips": hipField.setText(parts[1].trim()); break;
+                        case "Calories": targetCalorieField.setText(parts[1].trim()); break;
                     }
                 }
             }
             calculateWeightProgress();
-            System.out.println("Data loaded successfully.");
-        } catch (FileNotFoundException e) {
+            System.out.println("Fitness goals loaded successfully.");
+        } catch (IOException e) {
+            System.err.println("Failed to load fitness goals.");
             e.printStackTrace();
-            System.err.println("Error: Fitness goals file not found.");
+        }
+    }
+
+    public void saveFitnessGoalsToFile() {
+        Path filePath = FileManager.getUserFilePath(username, "fitnessGoals.txt");
+
+        try {
+            // Ensure the parent directory exists
+            Files.createDirectories(filePath.getParent());
+
+            // Write the file
+            try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                writer.write("Initial Weight: " + initialWeightField.getText());
+                writer.newLine();
+                writer.write("Current Weight: " + currentWeightField.getText());
+                writer.newLine();
+                writer.write("Target Weight: " + targetWeightField.getText());
+                writer.newLine();
+                writer.write("Chest: " + chestField.getText());
+                writer.newLine();
+                writer.write("Waist: " + waistField.getText());
+                writer.newLine();
+                writer.write("Hips: " + hipField.getText());
+                writer.newLine();
+                writer.write("Calories: " + targetCalorieField.getText());
+                writer.newLine();
+
+                System.out.println("Fitness goals saved successfully.");
+                calculateWeightProgress();
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to save fitness goals.");
+            e.printStackTrace();
         }
     }
 
 
+
+    // Calculate progress based on weight
+    public void calculateWeightProgress() {
+        try {
+            double initialWeight = Double.parseDouble(initialWeightField.getText().trim());
+            double currentWeight = Double.parseDouble(currentWeightField.getText().trim());
+            double targetWeight = Double.parseDouble(targetWeightField.getText().trim());
+
+            double weightToLose = initialWeight - targetWeight;
+            double progress = (initialWeight - currentWeight) / weightToLose;
+
+            progress = Math.min(1.0, Math.max(0.0, progress));
+            goalprogressBar.setProgress(progress);
+            progressLabel.setText(String.format("%.0f%% Completed", progress * 100));
+        } catch (NumberFormatException e) {
+            goalprogressBar.setProgress(0.0);
+            progressLabel.setText("0% Completed");
+            System.out.println("Invalid input: Please enter valid numbers for weights.");
+        }
+    }
 }

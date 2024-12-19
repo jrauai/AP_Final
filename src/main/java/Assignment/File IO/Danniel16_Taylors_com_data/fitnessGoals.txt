@@ -2,6 +2,6 @@ Initial Weight: 80
 Current Weight: 78
 Target Weight: 70
 Chest: 90
-Waist: 0.0
-Hips: 0.0
-Calories: 0.0
+Waist: 67.7
+Hips: 760.0
+Calories: 875.98

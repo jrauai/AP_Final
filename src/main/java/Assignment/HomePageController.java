@@ -11,6 +11,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class HomePageController extends Application {
@@ -43,16 +45,25 @@ public class HomePageController extends Application {
     private Label welcomeHome;
 
     private String username;
-    public void setUsername(String username) {
-        this.username=username;
+
+    public void setUserEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            System.err.println("Error: User email is null or empty!");
+            return;
+        }
+        this.username = sanitizeEmail(email); // Store sanitized email
     }
 
+    private String sanitizeEmail(String email) {
+        return email.replaceAll("[^a-zA-Z0-9]", "_");
+    }
+
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
             AnchorPane root = loader.load();
-
 
             primaryStage.setTitle("Fitness App");
             primaryStage.setScene(new Scene(root, 1024, 700));
@@ -64,11 +75,24 @@ public class HomePageController extends Application {
         }
     }
 
+    private Path getFilePath(String filename) {
+        if (username == null || username.isEmpty()) {
+            System.err.println("Warning: User email not set. Using default.");
+            username = "default_email";
+        }
+
+        try {
+            FileManager.ensureUserDirectoryExists(username);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return FileManager.getUserFilePath(username, filename);
+    }
 
     public void loadFitnessGoalToHome() {
-        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/fitnessGoals.txt");
-
-        try (Scanner scanner = new Scanner(file)) {
+        Path filePath = getFilePath("fitnessGoals.txt");
+        try (Scanner scanner = new Scanner(filePath.toFile())) {
 
             initialWeightHome.setText("0.0");
             currentWeightHome.setText("0.0");
@@ -80,64 +104,66 @@ public class HomePageController extends Application {
                 if (line.contains(": ")) {
                     String[] parts = line.split(": ");
                     if (parts.length > 1) {
-                        if (line.contains("Initial Weight")) {
-                            initialWeightHome.setText(parts[1].trim());
-                        } else if (line.contains("Current Weight")) {
-                            currentWeightHome.setText(parts[1].trim());
-                        } else if (line.contains("Target Weight")) {
-                            targetWeightHome.setText(parts[1].trim());
+                        switch (parts[0].trim()) {
+                            case "Initial Weight":
+                                initialWeightHome.setText(parts[1].trim());
+                                break;
+                            case "Current Weight":
+                                currentWeightHome.setText(parts[1].trim());
+                                break;
+                            case "Target Weight":
+                                targetWeightHome.setText(parts[1].trim());
+                                break;
                         }
                     }
                 }
             }
-            System.out.println("Data loaded successfully.");
+            System.out.println("Fitness goals loaded successfully.");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error: Fitness goals file not found.");
+            System.err.println("Error: Fitness goals file not found at " + filePath);
         }
-
     }
 
     public void loadExerciseToHome() {
-        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/exerciseLog.txt");
-
-        try (Scanner scanner = new Scanner(file)) {
+        Path filePath = getFilePath("exerciseLog.txt");
+        try (Scanner scanner = new Scanner(filePath.toFile())) {
 
             exerciseNumberHome.setText("0.0");
             durationHome.setText("0.0");
             exerciseCalorieHome.setText("0.0");
 
             while (scanner.hasNextLine()) {
-                String line=scanner.nextLine();
+                String line = scanner.nextLine();
 
-                if (line.contains(": ")){
+                if (line.contains(": ")) {
                     String[] parts = line.split(": ");
-                    if (parts.length > 1){
-                        if (line.contains("Exercise Number")) {
-                            exerciseNumberHome.setText(parts[1].trim());
-                        } else if (line.contains("Duration")) {
-                            durationHome.setText(parts[1].trim());
-                        } else if (line.contains("Exercise Calories")) {
-                            exerciseCalorieHome.setText(parts[1].trim());
+                    if (parts.length > 1) {
+                        switch (parts[0].trim()) {
+                            case "Exercise Number":
+                                exerciseNumberHome.setText(parts[1].trim());
+                                break;
+                            case "Duration":
+                                durationHome.setText(parts[1].trim());
+                                break;
+                            case "Exercise Calories":
+                                exerciseCalorieHome.setText(parts[1].trim());
+                                break;
                         }
                     }
                 }
             }
 
-            System.out.println("Data loaded successfully.");
+            System.out.println("Exercise log loaded successfully.");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error: Fitness goals file not found.");
+            System.err.println("Error: Exercise log file not found at " + filePath);
         }
-
     }
 
     public void loadNutritionToHome() {
-        File file = new File("src/main/java/Assignment/File IO/" + username + "_data/nutrition.txt");
-
-        try (Scanner scanner = new Scanner(file)) {
+        Path filePath = getFilePath("Nutrition.txt");
+        try (Scanner scanner = new Scanner(filePath.toFile())) {
             foodCalorieHome.setText("0.0");
 
             if (scanner.hasNextLine()) {
@@ -149,21 +175,36 @@ public class HomePageController extends Application {
                     }
                 }
             }
-            System.out.println("Data loaded successfully.");
+            System.out.println("Nutrition data loaded successfully.");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error: Fitness goals file not found.");
+            System.err.println("Error: Nutrition file not found at " + filePath);
         }
-
     }
 
     public void loadUsernameToHome() {
-        welcomeHome.setText(username);
+        Path filePath = getFilePath("userdata.txt");
+
+        try (Scanner scanner = new Scanner(filePath.toFile())) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("Name: ")) {
+                    String extractedName = line.split(": ")[1].trim();
+                    welcomeHome.setText(extractedName);
+                    System.out.println("Username loaded from file: " + extractedName);
+                    return;
+                }
+            }
+            System.err.println("Warning: 'Name' field not found in userdata.txt. Defaulting to 'Guest'.");
+            welcomeHome.setText("Guest");
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: userdata.txt file not found at " + filePath);
+            welcomeHome.setText("Guest");
+        }
     }
 
 
-    public static void main (String[]args){
+    public static void main(String[] args) {
         launch(args);
     }
 }

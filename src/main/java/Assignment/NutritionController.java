@@ -7,52 +7,127 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class NutritionController {
 
-    int i=0;
+    int i = 0;
 
     @FXML
-    protected Label remainingLabel;
-    @FXML
-    protected Label goalCaloriesLabel;
-    @FXML
-    protected Label foodLabel;
-    @FXML
-    protected Label exerciseLabel;
+    protected Label remainingLabel,goalCaloriesLabel, foodLabel, exerciseLabel, progressLabel;
+
     @FXML
     protected ProgressBar progressBar;
-    @FXML
-    protected Label progressLabel;
 
     @FXML
     protected ChoiceBox<String> typeChoiceBox;
-    @FXML
-    protected TextField foodNameText;
-    @FXML
-    protected TextField caloriesText;
 
     @FXML
-    protected Label breakfastTotalCalories;
-    @FXML
-    protected Label lunchTotalCalories;
-    @FXML
-    protected Label dinnerTotalCalories;
-    @FXML
-    protected Label snacksTotalCalories;
-    @FXML protected ListView<String> breakfastList;@FXML protected ListView<String> breakfastCals;
-    @FXML protected ListView<String> lunchList;@FXML protected ListView<String> lunchCals;
-    @FXML protected ListView<String> dinnerList;@FXML protected ListView<String> dinnerCals;
-    @FXML protected ListView<String> snacksList;@FXML protected ListView<String> snacksCals;
+    protected TextField foodNameText, caloriesText;
 
-    private ObservableList<String> breakfast1;
-    private ObservableList<String> breakfast2;
-    private ObservableList<String> lunch1;
-    private ObservableList<String> lunch2;
-    private ObservableList<String> dinner1;
-    private ObservableList<String> dinner2;
-    private ObservableList<String> snacks1;
-    private ObservableList<String> snacks2;
+    @FXML
+    protected Label breakfastTotalCalories, lunchTotalCalories, dinnerTotalCalories,snacksTotalCalories;
+
+    @FXML
+    protected ListView<String> breakfastList, breakfastCals, lunchList, lunchCals, dinnerList, dinnerCals, snacksList, snacksCals;
+
+    private ObservableList<String> breakfast1, breakfast2, lunch1, lunch2,dinner1,dinner2,snacks1,snacks2;
+
+    private String username;
+
+    public void setUsername(String email) {
+        if (email == null || email.isEmpty()) {
+            System.err.println("Error: Email cannot be null or empty in NutritionController.");
+            return;
+        }
+        this.username = email; // Use the sanitized email directly
+        loadOrInitializeNutrition();
+    }
+
+    private void loadOrInitializeNutrition() {
+        if (username == null || username.isEmpty()) {
+            System.err.println("Error: Email cannot be null or empty in NutritionController.");
+            return;
+        }
+
+        try {
+            FileManager.ensureUserDirectoryExists(username);
+            Path filePath = FileManager.getUserFilePath(username, "Nutrition.txt");
+
+            if (Files.exists(filePath)) {
+                loadNutritionFromFile(filePath);
+            } else {
+                initializeNewUserFields();
+            }
+        } catch (IOException e) {
+            System.err.println("Error ensuring user directory exists for nutrition.");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadNutritionFromFile(Path filePath) {
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+
+            for (String line : lines) {
+                if (line.startsWith("Breakfast:")) {
+                    populateMealData(lines, "Breakfast:", breakfast1, breakfast2);
+                } else if (line.startsWith("Lunch:")) {
+                    populateMealData(lines, "Lunch:", lunch1, lunch2);
+                } else if (line.startsWith("Dinner:")) {
+                    populateMealData(lines, "Dinner:", dinner1, dinner2);
+                } else if (line.startsWith("Snack:")) {
+                    populateMealData(lines, "Snack:", snacks1, snacks2);
+                } else if (line.startsWith("GoalCalories:")) {
+                    goalCaloriesLabel.setText(line.split(":")[1].trim());
+                }
+            }
+
+            updateProgressAndLabels();
+
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load nutrition data. A new session will be initialized.");
+            initializeNewUserFields();
+        }
+    }
+
+    private void initializeNewUserFields() {
+        breakfast1.clear();
+        breakfast2.clear();
+        lunch1.clear();
+        lunch2.clear();
+        dinner1.clear();
+        dinner2.clear();
+        snacks1.clear();
+        snacks2.clear();
+
+        goalCaloriesLabel.setText("1500");
+        remainingLabel.setText("1500");
+        progressBar.setProgress(0);
+        currentProgress = 0.0;
+    }
+
+    private void populateMealData(List<String> lines, String header, ObservableList<String> foodList, ObservableList<String> calorieList) {
+        int startIndex = lines.indexOf(header) + 1;
+        for (int i = startIndex; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line.trim().isEmpty()) break; // Stop at the next section
+            String[] parts = line.split(" - ");
+            if (parts.length == 2) {
+                foodList.add(parts[0].trim());
+                calorieList.add(parts[1].replace(" calories", "").trim());
+            }
+        }
+    }
+
 
     private double currentProgress = 0.0;
 
@@ -61,14 +136,14 @@ public class NutritionController {
         typeChoiceBox.setValue("Choose");
 
         typeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue=="Breakfast")
-                i=1;
-            else if (newValue=="Lunch")
-                i=2;
-            else if (newValue=="Dinner")
-                i=3;
-            else if (newValue=="Snack")
-                i=4;
+            if ("Breakfast".equals(newValue))
+                i = 1;
+            else if ("Lunch".equals(newValue))
+                i = 2;
+            else if ("Dinner".equals(newValue))
+                i = 3;
+            else if ("Snack".equals(newValue))
+                i = 4;
         });
 
         breakfast1 = FXCollections.observableArrayList();
@@ -91,124 +166,221 @@ public class NutritionController {
         snacks2 = FXCollections.observableArrayList();
         snacksCals.setItems(snacks2);
 
-        //temporary
+        caloriesText.setTextFormatter(new TextFormatter<>(change ->
+                (change.getControlNewText().matches("\\d*")) ? change : null));
+
+        // Temporary
         goalCaloriesLabel.setText("1500");
         remainingLabel.setText(goalCaloriesLabel.getText());
         progressBar.setProgress(0);
+        currentProgress = 0.0;
     }
 
     @FXML
     private void updateProgressBar(double targetProgress) {
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                while (currentProgress < targetProgress) {
-                    currentProgress += 0.01; // Increment the progress
-                    Platform.runLater(() -> progressBar.setProgress(currentProgress));
-                    Thread.sleep(100); // Control the speed of the animation
-                }
-                return null;
+        Timeline timeline = new Timeline();
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(50), e -> {
+            currentProgress = Math.min(currentProgress + 0.01, targetProgress);
+            progressBar.setProgress(currentProgress);
+            if (currentProgress >= targetProgress) {
+                timeline.stop();
             }
-        };
-        new Thread(task).start();
+        });
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void addFoodItem(ObservableList<String> foodList, ObservableList<String> calorieList, TextField foodInput, TextField calorieInput, Label totalCaloriesLabel) {
+        String foodName = foodInput.getText().trim();
+        String calorieValue = calorieInput.getText().trim();
+
+        if (!foodName.isEmpty() && !calorieValue.isEmpty()) {
+            try {
+                Integer.parseInt(calorieValue); // Validate calories as a number
+                foodList.add(foodName);
+                calorieList.add(calorieValue);
+                foodInput.clear();
+                calorieInput.clear();
+
+                int totalCalories = calorieList.stream()
+                        .mapToInt(Integer::parseInt)
+                        .sum();
+                totalCaloriesLabel.setText(String.valueOf(totalCalories));
+            } catch (NumberFormatException e) {
+                showAlert("Invalid Input", "Calories must be a number.");
+            }
+        }
+    }
+
+    private void updateProgressAndLabels() {
+        double baseCalories;
+        try {
+            baseCalories = Double.parseDouble(goalCaloriesLabel.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Input", "Goal calories must be a valid number.");
+            return;
+        }
+
+        int totalCalories = getTotalCalories();
+
+        double remainingCalories = baseCalories - totalCalories;
+        remainingLabel.setText(String.valueOf(remainingCalories));
+        foodLabel.setText(String.valueOf(totalCalories));
+
+        double progress = Math.min(totalCalories / baseCalories, 1.0);
+        updateProgressBar(progress);
+        progressLabel.setText(String.format("%.2f%%", progress * 100));
+    }
+
+    private int getTotalCalories() {
+        return sumCalories(breakfast2) + sumCalories(lunch2) + sumCalories(dinner2) + sumCalories(snacks2);
+    }
+
+    private int sumCalories(ObservableList<String> calorieList) {
+        return calorieList.stream()
+                .mapToInt(cal -> safeParseInt(cal))
+                .sum();
+    }
+
+    private int safeParseInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML
     public void onAddFoodAction(ActionEvent event) {
-
-        int cal = Integer.parseInt(caloriesText.getText());
-        double base = Double.parseDouble(goalCaloriesLabel.getText());
-        double food=0;
-        int bTotal = 0, lTotal = 0, dTotal = 0, sTotal = 0;
-
-        if (cal > 0) {
-            switch (i){
-                case 1:
-                    String input1 = foodNameText.getText().trim();
-                    if (!input1.isEmpty()) {
-                        breakfast1.add(input1);
-                        foodNameText.clear();
-                    }
-
-                    String input2 = caloriesText.getText().trim();
-                    if (!input2.isEmpty()) {
-                        breakfast2.add(input2);
-                        caloriesText.clear();
-                    }
-
-                    for (String calorie : breakfast2) {
-                        bTotal += Integer.parseInt(calorie);
-                    }
-                    breakfastTotalCalories.setText(String.valueOf(bTotal));
-                    break;
-                case 2:
-                    String input3 = foodNameText.getText().trim();
-                    if (!input3.isEmpty()) {
-                        lunch1.add(input3);
-                        foodNameText.clear();
-                    }
-
-                    String input4 = caloriesText.getText().trim();
-                    if (!input4.isEmpty()) {
-                        lunch2.add(input4);
-                        caloriesText.clear();
-                    }
-
-                    for (String calorie : lunch2) {
-                        lTotal += Integer.parseInt(calorie);
-                    }
-                    lunchTotalCalories.setText(String.valueOf(lTotal));
-                    break;
-                case 3:
-                    String input5 = foodNameText.getText().trim();
-                    if (!input5.isEmpty()) {
-                        dinner1.add(input5);
-                        foodNameText.clear();
-                    }
-
-                    String input6 = caloriesText.getText().trim();
-                    if (!input6.isEmpty()) {
-                        dinner2.add(input6);
-                        caloriesText.clear();
-                    }
-
-                    for (String calorie : dinner2) {
-                        dTotal += Integer.parseInt(calorie);
-                    }
-                    dinnerTotalCalories.setText(String.valueOf(dTotal));
-                    break;
-                case 4:
-                    String input7 = foodNameText.getText().trim();
-                    if (!input7.isEmpty()) {
-                        snacks1.add(input7);
-                        foodNameText.clear();
-                    }
-
-                    String input8 = caloriesText.getText().trim();
-                    if (!input8.isEmpty()) {
-                        snacks2.add(input8);
-                        caloriesText.clear();
-                    }
-
-                    for (String calorie : snacks2) {
-                        sTotal += Integer.parseInt(calorie);
-                    }
-                    snacksTotalCalories.setText(String.valueOf(sTotal));
-                    break;
-            }
+        switch (i) {
+            case 1:
+                addFoodItem(breakfast1, breakfast2, foodNameText, caloriesText, breakfastTotalCalories);
+                break;
+            case 2:
+                addFoodItem(lunch1, lunch2, foodNameText, caloriesText, lunchTotalCalories);
+                break;
+            case 3:
+                addFoodItem(dinner1, dinner2, foodNameText, caloriesText, dinnerTotalCalories);
+                break;
+            case 4:
+                addFoodItem(snacks1, snacks2, foodNameText, caloriesText, snacksTotalCalories);
+                break;
         }
-
-        double remaining = base - bTotal - lTotal - dTotal - sTotal;
-        food = bTotal + lTotal + dTotal + sTotal;
-        foodLabel.setText(String.valueOf(food));
-        remainingLabel.setText(String.valueOf(remaining));
-
-        double progress = food/base;
-        if (progress > 1)
-            progress = 1;
-        updateProgressBar(progress);
-        progressLabel.setText((progress*100) + "%");
-
+        updateProgressAndLabels();
     }
+    @FXML
+    private void saveNutritionToFile() {
+        Path filePath = FileManager.getUserFilePath(username, "Nutrition.txt");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+            // Save goal calories
+            writer.write("GoalCalories: " + goalCaloriesLabel.getText() + "\n\n");
+
+            // Save meal data
+            saveMealData(writer, "Breakfast", breakfast1, breakfast2);
+            saveMealData(writer, "Lunch", lunch1, lunch2);
+            saveMealData(writer, "Dinner", dinner1, dinner2);
+            saveMealData(writer, "Snack", snacks1, snacks2);
+
+            showAlert("Save Successful", "Nutrition data saved successfully.");
+        } catch (IOException e) {
+            showAlert("Error", "Failed to save nutrition data.");
+        }
+    }
+
+    private void saveMealData(BufferedWriter writer, String mealType, ObservableList<String> foodList, ObservableList<String> calorieList) throws IOException {
+        writer.write(mealType + ":\n");
+        for (int i = 0; i < foodList.size(); i++) {
+            writer.write(foodList.get(i) + " - " + calorieList.get(i) + " calories\n");
+        }
+        writer.write("\n");
+    }
+
+    @FXML
+    public void onEditFoodAction(ActionEvent event) {
+        ObservableList<String> foodList = getSelectedFoodList();
+        ObservableList<String> calorieList = getSelectedCalorieList();
+        ListView<String> foodListView = getSelectedFoodListView();
+
+        if (foodListView != null && foodListView.getSelectionModel().getSelectedIndex() >= 0) {
+            int index = foodListView.getSelectionModel().getSelectedIndex();
+            String newFoodName = foodNameText.getText().trim();
+            String newCalorieValue = caloriesText.getText().trim();
+
+            if (!newFoodName.isEmpty() && !newCalorieValue.isEmpty() && newCalorieValue.matches("\\d+")) {
+                foodList.set(index, newFoodName);
+                calorieList.set(index, newCalorieValue);
+                updateProgressAndLabels();
+            } else {
+                showAlert("Edit Failed", "Please provide valid inputs for food name and calories.");
+            }
+        } else {
+            showAlert("Edit Failed", "Please select an item to edit.");
+        }
+    }
+
+    @FXML
+    public void onDeleteFoodAction(ActionEvent event) {
+        ObservableList<String> foodList = getSelectedFoodList();
+        ObservableList<String> calorieList = getSelectedCalorieList();
+        ListView<String> foodListView = getSelectedFoodListView();
+
+        if (foodListView != null && foodListView.getSelectionModel().getSelectedIndex() >= 0) {
+            int index = foodListView.getSelectionModel().getSelectedIndex();
+            foodList.remove(index);
+            calorieList.remove(index);
+            updateProgressAndLabels();
+        } else {
+            showAlert("Delete Failed", "Please select an item to delete.");
+        }
+    }
+
+    private ObservableList<String> getSelectedFoodList() {
+        switch (i) {
+            case 1: return breakfast1;
+            case 2: return lunch1;
+            case 3: return dinner1;
+            case 4: return snacks1;
+            default: return null;
+        }
+    }
+
+    private ObservableList<String> getSelectedCalorieList() {
+        switch (i) {
+            case 1: return breakfast2;
+            case 2: return lunch2;
+            case 3: return dinner2;
+            case 4: return snacks2;
+            default: return null;
+        }
+    }
+
+    private ListView<String> getSelectedFoodListView() {
+        switch (i) {
+            case 1: return breakfastList;
+            case 2: return lunchList;
+            case 3: return dinnerList;
+            case 4: return snacksList;
+            default: return null;
+        }
+    }
+    private void initializeUserFiles(String sanitizedEmail) throws IOException {
+        Path fitnessGoalsPath = FileManager.getUserFilePath(sanitizedEmail, "fitnessGoals.txt");
+        Path exerciseLogPath = FileManager.getUserFilePath(sanitizedEmail, "exerciseLog.txt");
+        Path nutritionPath = FileManager.getUserFilePath(sanitizedEmail, "Nutrition.txt");
+
+        Files.writeString(fitnessGoalsPath, "Initial Weight: 0.0\nCurrent Weight: 0.0\nTarget Weight: 0.0\n");
+        Files.writeString(exerciseLogPath, "Exercise Number: 0\nDuration: 0\nExercise Calories: 0\n");
+        Files.writeString(nutritionPath, "GoalCalories: 1500\n");
+    }
+
 
 }

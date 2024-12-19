@@ -34,41 +34,48 @@ public class StepsController {
     @FXML
     private AnchorPane stepsPane;
 
-    private FitnessServiceHelper fitnessServiceHelper;
+//    private FitnessServiceHelper fitnessServiceHelper;
+//
+//    public void initialize() {
+//        fitnessServiceHelper = new FitnessServiceHelper();
+//        try {
+//            fitnessServiceHelper.initializeFitnessService(); // Initialize fitnessService
+//            fetchAndDisplayData();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.err.println("Error initializing FitnessServiceHelper: " + e.getMessage());
+//        }
+//    }
 
-    public void initialize() {
-        fitnessServiceHelper = new FitnessServiceHelper();
-        fetchAndDisplayData();
-    }
 
-    private void fetchAndDisplayData() {
-        try {
-            // Fetch step data from Google Fitness API
-            int totalSteps = fitnessServiceHelper.getTotalSteps();
-            double distance = fitnessServiceHelper.getTotalDistance();
-            double calories = fitnessServiceHelper.getTotalCalories();
-            int floors = fitnessServiceHelper.getTotalFloors();
-
-            // Update UI labels
-            totalStepsLabel.setText(String.valueOf(totalSteps));
-            distanceLabel.setText(String.format("%.2f km", distance));
-            caloriesLabel.setText(String.format("%.2f kcal", calories));
-            floorsLabel.setText(String.valueOf(floors));
-
-            // Fetch and display weekly steps data
-            List<Steps> weeklySteps = fitnessServiceHelper.getWeeklySteps();
-            updateBarChart(weeklySteps);
-
-            // Handle target steps
-            targetStepsLabel.setText("Target: " + targetStepsField.getText() + " steps");
-            targetStepsField.setOnAction(event -> {
-                String target = targetStepsField.getText();
-                targetStepsLabel.setText("Target: " + target + " steps");
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void fetchAndDisplayData() {
+//        try {
+//            // Fetch step data from Google Fitness API
+//            int totalSteps = fitnessServiceHelper.getTotalSteps();
+//            double distance = fitnessServiceHelper.getTotalDistance();
+//            double calories = fitnessServiceHelper.getTotalCalories();
+//            int floors = fitnessServiceHelper.getTotalFloors();
+//
+//            // Update UI labels
+//            totalStepsLabel.setText(String.valueOf(totalSteps));
+//            distanceLabel.setText(String.format("%.2f km", distance));
+//            caloriesLabel.setText(String.format("%.2f kcal", calories));
+//            floorsLabel.setText(String.valueOf(floors));
+//
+//            // Fetch and display weekly steps data
+//            List<Steps> weeklySteps = fitnessServiceHelper.getWeeklySteps();
+//            updateBarChart(weeklySteps);
+//
+//            // Handle target steps
+//            targetStepsLabel.setText("Target: " + targetStepsField.getText() + " steps");
+//            targetStepsField.setOnAction(event -> {
+//                String target = targetStepsField.getText();
+//                targetStepsLabel.setText("Target: " + target + " steps");
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void updateBarChart(List<Steps> weeklySteps) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();

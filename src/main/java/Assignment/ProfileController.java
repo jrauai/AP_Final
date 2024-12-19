@@ -1,39 +1,41 @@
 package Assignment;
 
-import UserInformation.User;
-import UserInformation.UserStorage;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.util.List;
-import java.util.Locale;
+import java.io.*;
+import java.nio.file.*;
+import java.time.LocalDate;
+import java.util.*;
 
 public class ProfileController {
 
     @FXML
-    private ImageView profileImageView;
+    private TextField signupName;
 
     @FXML
-    private Button changePictureButton;
+    private TextField signupEmail ;
 
     @FXML
-    private TextField nameField;
-
-    @FXML
-    private TextField emailField;
+    private PasswordField passwordField;
 
     @FXML
     private ComboBox<String> genderComboBox;
 
     @FXML
-    private DatePicker dobPicker;
+    private ComboBox<String> nationalityDropdown;
 
     @FXML
-    private ComboBox<String> nationalityDropdown;
+    private Button changePictureButton;
+
+    @FXML
+    private Button updateProfileButton;
+
+    @FXML
+    private ImageView profileImageView;
 
     @FXML
     private TextField heightField;
@@ -42,19 +44,14 @@ public class ProfileController {
     private TextField weightField;
 
     @FXML
-    private Button updateProfileButton;
+    private DatePicker dobPicker;
 
-    private UserStorage userStorage;
-    private User currentUser;
+    private String username; // Added declaration for username
+    private String profilePicturePath;
+    private final String BASE_DIRECTORY = "src/main/java/Assignment/File IO";
 
     @FXML
     public void initialize() {
-        // Initialize user storage
-        userStorage = new UserStorage();
-
-        // Load the current user (for demonstration purposes, assume the first user is the current user)
-        currentUser = userStorage.getUserByEmail("example@example.com"); // Replace with dynamic email retrieval
-
         // Populate gender options
         genderComboBox.getItems().addAll("Male", "Female");
 
@@ -64,30 +61,85 @@ public class ProfileController {
             nationalityDropdown.getItems().add(locale.getDisplayCountry());
         }
 
-        // Load user data into fields
-        if (currentUser != null) {
-            loadUserData();
-        }
-
         // Handle button actions
         changePictureButton.setOnAction(event -> changeProfilePicture());
-        updateProfileButton.setOnAction(event -> updateUserData());
+        updateProfileButton.setOnAction(event -> saveProfileData());
     }
 
-    private void loadUserData() {
-        nameField.setText(currentUser.getName());
-        emailField.setText(currentUser.getEmail());
-        genderComboBox.setValue(currentUser.getGender());
-        dobPicker.setValue(java.time.LocalDate.parse(currentUser.getDateOfBirth()));
-        nationalityDropdown.setValue(currentUser.getNationality());
-        heightField.setText(currentUser.getHeight());
-        weightField.setText(currentUser.getWeight());
+    public void setUsername(String email) {
+        System.out.println("setUsername called with: " + email);
+        this.username = email;
+        loadProfileData(email);
+    }
 
-        // Load profile picture if available
-        File profilePicture = new File("path/to/profile/picture.jpg"); // Replace with actual path logic
-        if (profilePicture.exists()) {
-            profileImageView.setImage(new Image(profilePicture.toURI().toString()));
+    private void loadProfileData(String email) {
+        if (email == null || email.isEmpty()) {
+            System.err.println("Email is null or empty!");
+            return;
         }
+
+        Path userDataFile = FileManager.getUserFilePath(email, "userdata.txt");
+        Path profileDataFile = FileManager.getUserFilePath(email, "profile_data.txt");
+
+        Map<String, String> userData = readFileToMap(userDataFile);
+        Map<String, String> profileData = readFileToMap(profileDataFile);
+
+        signupName.setText(userData.getOrDefault("Name", ""));
+        signupEmail.setText(userData.getOrDefault("Email", ""));
+        passwordField.setText(userData.getOrDefault("Password", ""));
+
+        genderComboBox.setValue(profileData.getOrDefault("Gender", ""));
+        nationalityDropdown.setValue(profileData.getOrDefault("Nationality", ""));
+        heightField.setText(profileData.getOrDefault("Height", ""));
+        weightField.setText(profileData.getOrDefault("Weight", ""));
+        String dob = profileData.get("DOB");
+        if (dob != null) {
+            dobPicker.setValue(LocalDate.parse(dob));
+        }
+        loadProfilePicture(profileData.get("ProfilePicturePath"));
+    }
+
+    private void loadProfilePicture(String picturePath) {
+        if (picturePath != null && !picturePath.isEmpty()) {
+            File profilePicture = new File(picturePath);
+            if (profilePicture.exists()) {
+                profileImageView.setImage(new Image(profilePicture.toURI().toString()));
+                profilePicturePath = picturePath;
+            } else {
+                System.err.println("Profile picture file not found at: " + picturePath);
+            }
+        }
+    }
+
+    private void saveProfileData() {
+        if (username == null || username.isEmpty()) {
+            System.err.println("Username is not set.");
+            return;
+        }
+
+        Path userDataFile = FileManager.getUserFilePath(username, "userdata.txt");
+        Path profileDataFile = FileManager.getUserFilePath(username, "profile_data.txt");
+
+        Map<String, String> userData = new HashMap<>();
+        userData.put("Name", signupName.getText());
+        userData.put("Email", signupEmail.getText());
+        userData.put("Password", passwordField.getText());
+
+        Map<String, String> profileData = new HashMap<>();
+        profileData.put("Gender", genderComboBox.getValue());
+        profileData.put("Nationality", nationalityDropdown.getValue());
+        profileData.put("Height", heightField.getText());
+        profileData.put("Weight", weightField.getText());
+        LocalDate dob = dobPicker.getValue();
+        if (dob != null) {
+            profileData.put("DOB", dob.toString());
+        }
+        profileData.put("ProfilePicturePath", profilePicturePath);
+
+        writeMapToFile(userData, userDataFile);
+        writeMapToFile(profileData, profileDataFile);
+
+        System.out.println("Profile data saved successfully.");
     }
 
     private void changeProfilePicture() {
@@ -99,59 +151,45 @@ public class ProfileController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
+            profilePicturePath = selectedFile.getAbsolutePath();
             profileImageView.setImage(new Image(selectedFile.toURI().toString()));
-            // Save the selected file path (implement saving logic if necessary)
         }
     }
 
-    private void updateUserData() {
-        // Update current user fields
-        currentUser.setName(nameField.getText());
-        currentUser.setGender(genderComboBox.getValue());
-        currentUser.setDateOfBirth(dobPicker.getValue().toString());
-        currentUser.setNationality(nationalityDropdown.getValue());
-        currentUser.setHeight(heightField.getText());
-        currentUser.setWeight(weightField.getText());
-
-        // Load users from storage
-        UserStorage userStorage = new UserStorage();
-        List<User> users = userStorage.loadUsers();
-
-        // Debug print to confirm loaded users
-        System.out.println("Loaded users from storage: ");
-        for (User user : users) {
-            System.out.println(user);
+    private Map<String, String> readFileToMap(Path filePath) {
+        Map<String, String> dataMap = new HashMap<>();
+        if (!Files.exists(filePath)) {
+            System.err.println("File not found: " + filePath.toAbsolutePath());
+            return dataMap;
         }
 
-        // Update the specific user in the list
-        boolean userFound = false;
-        for (int i = 0; i < users.size(); i++) {
-            System.out.println("Checking user: " + users.get(i)); // Debug print
-            if (users.get(i).getEmail().equals(currentUser.getEmail())) {
-                System.out.println("Updating user: " + currentUser); // Debug print
-                users.set(i, currentUser);
-                userFound = true;
-                break;
+        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(": ")) {
+                    String[] parts = line.split(": ");
+                    if (parts.length == 2) {
+                        dataMap.put(parts[0].trim(), parts[1].trim());
+                    }
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return dataMap;
+    }
 
-        if (userFound) {
-            // Debug print before saving
-            System.out.println("Users before saving: ");
-            for (User user : users) {
-                System.out.println(user); // Debug print
+    private void writeMapToFile(Map<String, String> dataMap, Path filePath) {
+        try {
+            Files.createDirectories(filePath.getParent()); // Ensure directory exists
+            try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+                for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+                    writer.write(entry.getKey() + ": " + entry.getValue());
+                    writer.newLine();
+                }
             }
-            userStorage.saveUsers(users); // Save the updated users
-            System.out.println("User data updated and saved."); // Debug print
-        } else {
-            System.err.println("User not found in storage.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        // Confirmation alert
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Profile Updated");
-        alert.setHeaderText(null);
-        alert.setContentText("Your profile has been successfully updated.");
-        alert.showAndWait();
     }
 }
