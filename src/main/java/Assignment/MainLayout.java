@@ -5,17 +5,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 //SideBar
 public class MainLayout{
@@ -50,8 +55,12 @@ public class MainLayout{
     @FXML
     private Button logOutButton;
 
+    @FXML
+    private Label welcomeHome;
+
     private String username;
     private String userEmail;
+
 
 
     private String sanitizeEmail(String email) {
@@ -107,17 +116,20 @@ public class MainLayout{
 
                 if (nameLine != null && nameLine.startsWith("Name: ")) {
                     this.username = nameLine.split(": ")[1].trim();
-                    System.out.println("Loaded username: " + this.username); // Debugging
+                    System.out.println("Loaded username: " + this.username);
+
+                    if (welcomeHome != null) {
+                        welcomeHome.setText("Welcome, " + this.username + "!");
+                    }
                 }
             }
-
-            loadHomePage();
 
         } catch (IOException e) {
             System.err.println("Error while accessing or creating userdata.txt.");
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void loadHomePage() {
@@ -209,6 +221,24 @@ public class MainLayout{
             e.printStackTrace();
         }
         return controller;
+    }
+
+    @FXML
+    public void handleLogOut() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FitnessAppLogin.fxml"));
+            Parent loginRoot = loader.load();
+
+            Stage currentStage = (Stage) logOutButton.getScene().getWindow();
+
+            currentStage.setScene(new Scene(loginRoot));
+            currentStage.setTitle("Login");
+
+            System.out.println("User logged out successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load the login page.");
+        }
     }
 
     private void highlightButton(Button selectedButton) {
