@@ -3,41 +3,51 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.ComboBox?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Assignment.DailyActivitiesController">
-    <children>
-        <VBox spacing="10" alignment="TOP_CENTER">
-            <!-- Time Filter Dropdown -->
-            <ComboBox fx:id="timeFilterComboBox" prefWidth="200" />
+<VBox alignment="TOP_CENTER" prefHeight="650.0" prefWidth="887.0" spacing="20" style="-fx-padding: 20; -fx-background-color: #f0f8ff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.DailyActivitiesController">
 
-            <!-- Charts Section -->
-            <HBox spacing="20">
-                <BarChart fx:id="activeTimeChart" title="Active Time">
-                    <xAxis>
-                        <CategoryAxis fx:id="timeXAxis" label="Exercise Type" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis fx:id="timeYAxis" label="Minutes" />
-                    </yAxis>
-                </BarChart>
-                <BarChart fx:id="activityCaloriesChart" title="Calories Burned">
-                    <xAxis>
-                        <CategoryAxis fx:id="caloriesXAxis" label="Exercise Type" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis fx:id="caloriesYAxis" label="Calories" />
-                    </yAxis>
-                </BarChart>
-            </HBox>
+    <!-- Title Section -->
+    <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2a4d69;" text="Daily Activities Overview" />
 
-            <!-- Daily Summary -->
-            <Label fx:id="dailySummaryLabel" style="-fx-font-size: 16px;" text="Summary will appear here." />
-        </VBox>
-    </children>
-</AnchorPane>
+    <!-- Time Filter ComboBox -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label style="-fx-font-size: 14; -fx-text-fill: #2a4d69;" text="Select Time Range:" />
+        <ComboBox fx:id="timeFilterComboBox" prefWidth="200" style="-fx-border-color: #4a90e2; -fx-border-width: 1; -fx-background-color: #e6f2ff;" />
+    </VBox>
 
+    <!-- Bar Chart for Active Time -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4a90e2;" text="Active Time (Minutes) by Exercise" />
+        <BarChart fx:id="activeTimeChart" prefHeight="300" prefWidth="500" style="-fx-border-color: #4a90e2; -fx-border-width: 2;">
+            <xAxis>
+                <CategoryAxis label="Exercise Type" style="-fx-text-fill: #2a4d69;" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Duration (mins)" style="-fx-text-fill: #2a4d69;" />
+            </yAxis>
+        </BarChart>
+    </VBox>
+
+    <!-- Bar Chart for Calories -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4a90e2;" text="Calories Burned by Exercise" />
+        <BarChart fx:id="activityCaloriesChart" prefHeight="300" prefWidth="500" style="-fx-border-color: #4a90e2; -fx-border-width: 2;">
+            <xAxis>
+                <CategoryAxis label="Exercise Type" style="-fx-text-fill: #2a4d69;" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Calories" style="-fx-text-fill: #2a4d69;" />
+            </yAxis>
+        </BarChart>
+    </VBox>
+
+    <!-- Daily Summary Section -->
+    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #e6f2ff; -fx-padding: 10; -fx-border-color: #4a90e2; -fx-border-width: 1;">
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2a4d69;" text="Daily Summary" />
+        <Label fx:id="dailySummaryLabel" style="-fx-font-size: 14; -fx-text-fill: #2a4d69;" text="Summary will appear here." />
+    </VBox>
+
+</VBox>
