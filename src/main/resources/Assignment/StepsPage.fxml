@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Assignment.StepsController">
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane style="-fx-background-color: e6f2ff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="Assignment.StepsController">
     <children>
-        <VBox spacing="20" layoutX="20" layoutY="20">
+        <VBox layoutX="20" layoutY="20" spacing="20">
             <HBox spacing="30">
                 <VBox spacing="10">
-                    <Label text="Steps" style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                    <Label fx:id="stepsLabel" text="0" style="-fx-font-size: 30; -fx-font-weight: bold;" />
+                    <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Steps" />
+                    <Label fx:id="stepsLabel" style="-fx-font-size: 30; -fx-font-weight: bold;" text="0" />
                 </VBox>
                 <VBox spacing="10">
-                    <Label text="Target" style="-fx-font-size: 16;" />
-                    <Label fx:id="targetLabel" text="10,000" style="-fx-font-size: 18;" />
+                    <Label style="-fx-font-size: 16;" text="Target" />
+                    <Label fx:id="targetLabel" style="-fx-font-size: 18;" text="10,000" />
                 </VBox>
                 <ProgressBar fx:id="stepsProgressBar" prefWidth="300" progress="0.0" />
             </HBox>
 
             <HBox spacing="20">
                 <VBox spacing="5">
-                    <Label text="Distance (km)" style="-fx-font-size: 14;" />
-                    <Label fx:id="distanceLabel" text="0.0" style="-fx-font-size: 16;" />
+                    <Label style="-fx-font-size: 14;" text="Distance (km)" />
+                    <Label fx:id="distanceLabel" style="-fx-font-size: 16;" text="0.0" />
                 </VBox>
                 <VBox spacing="5">
-                    <Label text="Calories (kcal)" style="-fx-font-size: 14;" />
-                    <Label fx:id="caloriesLabel" text="0.0" style="-fx-font-size: 16;" />
+                    <Label style="-fx-font-size: 14;" text="Calories (kcal)" />
+                    <Label fx:id="caloriesLabel" style="-fx-font-size: 16;" text="0.0" />
                 </VBox>
                 <VBox spacing="5">
-                    <Label text="Floors" style="-fx-font-size: 14;" />
-                    <Label fx:id="floorsLabel" text="0" style="-fx-font-size: 16;" />
+                    <Label style="-fx-font-size: 14;" text="Floors" />
+                    <Label fx:id="floorsLabel" style="-fx-font-size: 16;" text="0" />
                 </VBox>
             </HBox>
 
-            <Label text="Steps by Time of Day" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <BarChart fx:id="stepsBarChart" title="Steps by Time of Day" legendVisible="false">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Steps by Time of Day" />
+            <BarChart fx:id="stepsBarChart" legendVisible="false" style="-fx-border-color: 4a90e2;" title="Steps by Time of Day">
                 <xAxis>
                     <CategoryAxis label="Time (h)" />
                 </xAxis>

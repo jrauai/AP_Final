@@ -132,6 +132,7 @@ public class AdditionalInfoController {
         try {
             int otpCode = Integer.parseInt(otp);
             if (totpUtil.verifyCode(secretKey, otpCode)) {
+                // Collect user details
                 String gender = genderComboBox.getValue() != null ? genderComboBox.getValue() : "";
                 String dob = dobPicker.getValue() != null ? dobPicker.getValue().toString() : "";
                 String nationality = nationalityDropdown.getValue() != null ? nationalityDropdown.getValue() : "";
@@ -144,6 +145,7 @@ public class AdditionalInfoController {
                     return;
                 }
 
+                // Save profile data
                 Path userDir = FileManager.getUserFilePath(userEmail, "");
                 Path profileDataFile = userDir.resolve("profile_data.txt");
 
@@ -155,18 +157,20 @@ public class AdditionalInfoController {
                 Files.createDirectories(userDir);
                 Files.writeString(profileDataFile, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
-                messageLabel.setStyle("-fx-text-fill: green;");
-                messageLabel.setText("Additional information saved successfully!");
-
+                // Load Home Page
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainLayout.fxml"));
                 Parent homePageRoot = loader.load();
+
+                Stage currentStage = (Stage) continueButton.getScene().getWindow();
+                currentStage.close();
 
                 Stage homeStage = new Stage();
                 homeStage.setScene(new Scene(homePageRoot, 1024, 700));
                 homeStage.setTitle("Home Page");
                 homeStage.show();
 
-                ((Stage) continueButton.getScene().getWindow()).close();
+                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("Welcome to the Home Page!");
             } else {
                 messageLabel.setStyle("-fx-text-fill: red;");
                 messageLabel.setText("Invalid OTP. Please try again.");
@@ -176,12 +180,13 @@ public class AdditionalInfoController {
             messageLabel.setText("OTP must be a numeric value.");
         } catch (IOException e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Failed to save additional information.");
+            messageLabel.setText("Failed to save additional information or load Home Page.");
             e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Failed to load Home Page.");
+            messageLabel.setText("An unexpected error occurred.");
+            e.printStackTrace();
         }
     }
+
 }

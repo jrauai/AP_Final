@@ -1,24 +1,63 @@
+/* Added primary and secondary colors for the app */
+.root {
+    --primary-color: #007BFF;
+    --secondary-color: #28A745;
+    --background-color: #F8F9FA;
+    --accent-color: #FFC107;
+    --text-primary: #343A40;
+    --text-secondary: #6C757D;
+}
+
+/* General text styling */
 .text-field, .password-field {
-    -fx-border-color: lightgray;
+    -fx-border-color: var(--secondary-color);
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-padding: 5;
 }
 
 .text-field:focused, .password-field:focused {
-    -fx-border-color: #4CAF50;
+    -fx-border-color: var(--primary-color);
     -fx-border-width: 1.5;
 }
 
+/* Button styling */
 .button {
+    -fx-background-color: var(--primary-color);
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .button:hover {
-    -fx-background-color: #45a049;
+    -fx-background-color: var(--accent-color);
 }
 
+/* Label styling */
 .label {
     -fx-font-family: "Arial";
+    -fx-text-fill: var(--text-primary);
+}
+
+/* Background styling for main content */
+.root {
+    -fx-background-color: var(--background-color);
+}
+
+/* Add styles for progress bar */
+.progress-bar {
+    -fx-accent: var(--secondary-color);
+    -fx-background-color: var(--background-color);
+}
+
+/* Chart background customization */
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+/* Highlighted button styling */
+.button.selected {
+    -fx-background-color: var(--accent-color);
+    -fx-text-fill: var(--text-primary);
 }

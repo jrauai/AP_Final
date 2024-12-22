@@ -73,11 +73,12 @@ public class MainLayout{
             System.err.println("Error: User email is null or empty!");
             this.userEmail = "default_email";
         } else {
-            this.userEmail = email;
+            this.userEmail = sanitizeEmail(email);
         }
 
         try {
             FileManager.ensureUserDirectoryExists(this.userEmail);
+            initializeDefaultUserFiles();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +87,49 @@ public class MainLayout{
         loadHomePage();
     }
 
+    private void initializeDefaultUserFiles() throws IOException {
+        Path userDir = FileManager.getUserFilePath(userEmail, "");
+        Files.createDirectories(userDir);
+
+        Path fitnessGoalsFile = userDir.resolve("fitnessGoals.txt");
+        if (!Files.exists(fitnessGoalsFile)) {
+            Files.writeString(fitnessGoalsFile, "Initial Weight: 0.0\nCurrent Weight: 0.0\nTarget Weight: 0.0\n");
+        }
+
+        Path exerciseLogFile = userDir.resolve("exerciseLog.txt");
+        if (!Files.exists(exerciseLogFile)) {
+            Files.writeString(exerciseLogFile, "Exercise Number: 0\nDuration: 0\nExercise Calories: 0\n");
+        }
+
+        Path nutritionFile = userDir.resolve("Nutrition.txt");
+        if (!Files.exists(nutritionFile)) {
+            Files.writeString(nutritionFile, "GoalCalories: 1500\n");
+        }
+
+        Path userdataFile = userDir.resolve("userdata.txt");
+        if (!Files.exists(userdataFile)) {
+            Files.writeString(userdataFile, "Name: Guest\nEmail: " + userEmail + "\n");
+        }
+    }
+
     private void loadUserData() {
+        Path userDir = FileManager.getUserFilePath(userEmail, "");
+        Path userdataFile = userDir.resolve("userdata.txt");
+
+        try {
+            if (Files.exists(userdataFile)) {
+                Files.lines(userdataFile).forEach(line -> {
+                    if (line.startsWith("Name: ")) {
+                        this.username = line.split(": ")[1].trim();
+                    }
+                });
+                welcomeHome.setText("Welcome, " + this.username + "!");
+            } else {
+                System.err.println("Error: userdata.txt not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (userEmail == null || userEmail.isEmpty()) {
             System.err.println("User email is null or empty!");
             return;
@@ -130,17 +173,23 @@ public class MainLayout{
         }
     }
 
-
     @FXML
     public void loadHomePage() {
-        HomePageController controller = loadPage("/Assignment/HomePage.fxml");
-        highlightButton(homeButton);
-        if (controller != null) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Assignment/HomePage.fxml"));
+            Node page = loader.load();
+            mainContentPane.getChildren().setAll(page);
+
+            HomePageController controller = loader.getController();
             controller.setUserEmail(userEmail);
             controller.loadFitnessGoalToHome();
             controller.loadExerciseToHome();
             controller.loadNutritionToHome();
             controller.loadUsernameToHome();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -152,9 +201,21 @@ public class MainLayout{
 
     @FXML
     public void loadExerciseLog() {
+        if (userEmail == null || userEmail.isEmpty()) {
+            System.err.println("Error: User email is not initialized. Cannot load Exercise page.");
+            return;
+        }
+
         ExerciseLogController controller = loadPage("/Assignment/ExerciseLogView.fxml");
         highlightButton(workoutButton);
+
+        if (controller != null) {
+            controller.setUserEmail(userEmail); // Pass the logged-in user's email
+        } else {
+            System.err.println("Error: Failed to load ExerciseLogController.");
+        }
     }
+
 
     @FXML
     public void loadFitnessGoalPage() {
@@ -252,7 +313,7 @@ public class MainLayout{
         searchButton.setStyle("-fx-background-color: transparent;");
         logOutButton.setStyle("-fx-background-color: transparent;");
 
-        selectedButton.setStyle("-fx-background-color: #d0d0d0;");
+        selectedButton.setStyle("-fx-background-color: #42b6f5;");
 
     }
 }

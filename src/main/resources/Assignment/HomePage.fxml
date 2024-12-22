@@ -11,11 +11,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="913.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePageController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="650.0" prefWidth="913.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Assignment.HomePageController">
     <children>
-        <VBox prefHeight="650.0" prefWidth="1111.0">
+        <VBox prefHeight="650.0" prefWidth="1111.0" stylesheets="@style.css">
             <children>
-                <HBox alignment="CENTER" prefHeight="151.0" prefWidth="970.0" style="-fx-background-color: #FFFAF0;">
+                <HBox alignment="CENTER" prefHeight="151.0" prefWidth="970.0" style="-fx-background-color: #4cf573;">
                     <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Back " textAlignment="CENTER">
                      <font>

@@ -30,11 +30,16 @@ public class FitnessGoalController {
 
     public void setUsername(String email) {
         if (email == null || email.isEmpty()) {
-            System.err.println("Error: Email cannot be null or empty in FitnessGoalController.");
-            return;
+            System.err.println("Error: User email is not initialized. Cannot load FitnessGoal page.");
+            this.username = "default_email"; // Fallback to default
+        } else {
+            this.username = sanitizeEmail(email);
         }
-        this.username = email;
         loadOrInitializeFitnessGoals();
+    }
+
+    private String sanitizeEmail(String email) {
+        return email.replaceAll("[^a-zA-Z0-9]", "_");
     }
 
 
@@ -60,17 +65,6 @@ public class FitnessGoalController {
             e.printStackTrace();
         }
     }
-
-    private void initializeUserFiles(String sanitizedEmail) throws IOException {
-        Path fitnessGoalsPath = FileManager.getUserFilePath(sanitizedEmail, "fitnessGoals.txt");
-        Path exerciseLogPath = FileManager.getUserFilePath(sanitizedEmail, "exerciseLog.txt");
-        Path nutritionPath = FileManager.getUserFilePath(sanitizedEmail, "Nutrition.txt");
-
-        Files.writeString(fitnessGoalsPath, "Initial Weight: 0.0\nCurrent Weight: 0.0\nTarget Weight: 0.0\n");
-        Files.writeString(exerciseLogPath, "Exercise Number: 0\nDuration: 0\nExercise Calories: 0\n");
-        Files.writeString(nutritionPath, "GoalCalories: 1500\n");
-    }
-
 
     private void initializeNewUserFields() {
         initialWeightField.setText("");
