@@ -17,7 +17,7 @@ public class ProfileController {
     private TextField signupName;
 
     @FXML
-    private TextField signupEmail ;
+    private TextField signupEmail;
 
     @FXML
     private PasswordField passwordField;
@@ -48,7 +48,6 @@ public class ProfileController {
 
     private String username;
     private String profilePicturePath;
-    private final String BASE_DIRECTORY = "src/main/java/Assignment/File IO";
 
     @FXML
     public void initialize() {
@@ -72,6 +71,14 @@ public class ProfileController {
     private void loadProfileData(String email) {
         if (email == null || email.isEmpty()) {
             System.err.println("Email is null or empty!");
+            return;
+        }
+
+        try {
+            FileManager.ensureUserDirectoryExists(email);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to ensure user directory exists.");
             return;
         }
 
@@ -104,6 +111,7 @@ public class ProfileController {
                 profilePicturePath = picturePath;
             } else {
                 System.err.println("Profile picture file not found at: " + picturePath);
+                profileImageView.setImage(new Image("/default_profile_picture.png")); // Fallback to default image
             }
         }
     }

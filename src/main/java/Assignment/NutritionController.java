@@ -46,17 +46,18 @@ public class NutritionController {
     public void setUsername(String email) {
         if (email == null || email.isEmpty()) {
             System.err.println("Error: Email cannot be null or empty in NutritionController.");
-            return;
+            this.username = "default_email";
+        } else {
+            this.username = sanitizeEmail(email);
         }
-        this.username = email;
         loadOrInitializeNutrition();
     }
 
+    private String sanitizeEmail(String email) {
+        return email.replaceAll("[^a-zA-Z0-9]", "_");
+    }
+
     private void loadOrInitializeNutrition() {
-        if (username == null || username.isEmpty()) {
-            System.err.println("Error: Email cannot be null or empty in NutritionController.");
-            return;
-        }
         try {
             FileManager.ensureUserDirectoryExists(username);
             Path filePath = FileManager.getUserFilePath(username, "Nutrition.txt");
